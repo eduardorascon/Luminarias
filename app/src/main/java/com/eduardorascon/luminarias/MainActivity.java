@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launchCamera(View view) {
-        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePicture.resolveActivity(getPackageManager()) != null) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
             if (photoFile != null) {
                 Uri photoUri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
-                takePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                startActivityForResult(takePicture, 1);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(takePictureIntent, 1);
             }
         }
     }
