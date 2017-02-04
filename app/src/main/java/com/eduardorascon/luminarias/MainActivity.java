@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import java.io.File;
@@ -44,10 +45,13 @@ public class MainActivity extends AppCompatActivity {
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "Luminaria_" + timeStamp + "";
-        File storageDir = getFilesDir();
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        Log.i("imageFileName", imageFileName);
+        Log.i("storageDir", storageDir.toString());
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
         currentPhotoPath = image.getAbsolutePath();
+        Log.i("currentPhotoPath", currentPhotoPath);
         return image;
     }
 }
