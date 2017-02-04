@@ -10,12 +10,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     String currentPhotoPath;
 
     @Override
@@ -53,5 +56,10 @@ public class MainActivity extends AppCompatActivity {
         currentPhotoPath = image.getAbsolutePath();
         Log.i("currentPhotoPath", currentPhotoPath);
         return image;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
     }
 }
