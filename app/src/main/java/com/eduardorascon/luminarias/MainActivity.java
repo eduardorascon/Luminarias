@@ -95,9 +95,6 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == 1) {
 
             try {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 2;
-
                 ExifInterface exif = new ExifInterface(currentPhotoPath);
                 int orientation = exif.getAttributeInt(
                         ExifInterface.TAG_ORIENTATION,
@@ -116,15 +113,13 @@ public class MainActivity extends AppCompatActivity {
                 Matrix mat = new Matrix();
                 mat.postRotate(angle);
 
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 2;
                 Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(currentPhotoPath), null, options);
-                Bitmap bitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(),
-                        bmp.getHeight(), mat, true);
-                ByteArrayOutputStream outstudentstreamOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100,
-                        outstudentstreamOutputStream);
+                Bitmap bitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, new ByteArrayOutputStream());
                 imageView.setImageBitmap(bitmap);
 
-                imageView.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -134,11 +129,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "Luminaria_" + timeStamp + "";
+        String imageFileName = "L_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
