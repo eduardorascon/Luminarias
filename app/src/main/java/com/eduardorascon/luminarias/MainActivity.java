@@ -22,7 +22,9 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
@@ -53,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
         textViewLocation = (TextView) findViewById(R.id.textViewLocation);
         imageView = (ImageView) findViewById(R.id.imageView);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        tipoPosteSpinner = (Spinner) findViewById(R.id.spinnerTipoPoste);
+        tipoLamparaSpinner = (Spinner) findViewById(R.id.spinnerTipoLampara);
+        loadTipoLamparaSpinner();
+        loadTipoPosteSpinner();
 
         toggleGPSUpdates();
     }
@@ -178,7 +185,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private double longitudeGPS = 0.2d, latitudeGPS = 0.1d;
+    private double longitudeGPS = 0.0d, latitudeGPS = 0.0d;
+    private Spinner tipoLamparaSpinner, tipoPosteSpinner;
     private final LocationListener locationListenerGPS = new LocationListener() {
 
         @Override
@@ -208,4 +216,18 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    public void loadTipoLamparaSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.tipo_lampara_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        tipoLamparaSpinner.setAdapter(adapter);
+    }
+
+    public void loadTipoPosteSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.tipo_poste_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        tipoPosteSpinner.setAdapter(adapter);
+    }
 }
