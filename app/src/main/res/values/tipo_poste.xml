@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tipo_poste_array">
-        <item>ELIGE EL TIPO DE POSTE:</item>
+        <item>ELIGE POSTE...</item>
         <item>CFE</item>
         <item>MUNICIPAL</item>
     </string-array>
     <string-array name="tipo_lampara_array">
-        <item>ELIGE EL TIPO DE LAMPARA:</item>
+        <item>ELIGE LAMPARA...</item>
         <item>MERCURIAL</item>
         <item>NATURAL</item>
     </string-array>

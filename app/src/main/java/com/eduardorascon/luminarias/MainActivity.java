@@ -41,7 +41,6 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     String currentPhotoPath;
     LocationManager locationManager;
-    TextView textViewLocation;
     ImageView imageView;
 
     @Override
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHandler db = DatabaseHandler.getInstance(this);
         db.getWritableDatabase();
 
-        textViewLocation = (TextView) findViewById(R.id.textViewLocation);
         imageView = (ImageView) findViewById(R.id.imageView);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -76,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHandler db = DatabaseHandler.getInstance(view.getContext());
         long result = db.insertLuminaria(luminaria);
 
-        textViewLocation.setText(String.valueOf(result));
+        //textViewLocation.setText(String.valueOf(result));
     }
 
     public void launchCamera(View view) {
@@ -193,12 +191,12 @@ public class MainActivity extends AppCompatActivity {
         public void onLocationChanged(Location location) {
             longitudeGPS = location.getLongitude();
             latitudeGPS = location.getLatitude();
-            runOnUiThread(new Runnable() {
+           /* runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     textViewLocation.setText("lat:" + latitudeGPS + ", lon:" + longitudeGPS);
                 }
-            });
+            });*/
         }
 
         @Override

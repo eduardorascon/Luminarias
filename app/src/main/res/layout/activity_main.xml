@@ -11,63 +11,68 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.eduardorascon.luminarias.MainActivity">
 
-    <TextView
-        android:id="@+id/textViewLocation"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:paddingBottom="16dp"
-        android:text="TextView"
-        android:textAllCaps="true" />
+        android:orientation="horizontal"
+        android:paddingBottom="16dp">
 
-    <TextView
-        android:id="@+id/textViewTipoPoste"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/textViewLocation"
-        android:paddingBottom="16dp"
-        android:text="TIPO DE POSTE:" />
+        <TextView
+            android:id="@+id/textViewTipoPoste"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TIPO DE POSTE:" />
 
-    <Spinner
-        android:id="@+id/spinnerTipoPoste"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewTipoPoste"
-        android:paddingBottom="16dp" />
+        <Spinner
+            android:id="@+id/spinnerTipoPoste"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/textViewAltura"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/spinnerTipoPoste"
-        android:paddingBottom="16dp"
-        android:text="ALTURA DE POSTE:" />
-
-    <EditText
-        android:id="@+id/editTextAltura"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewAltura"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        android:paddingBottom="16dp" />)
+        android:layout_below="@id/linearLayout1"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp">
 
-    <TextView
-        android:id="@+id/textViewTipoLampara"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editTextAltura"
-        android:paddingBottom="16dp"
-        android:text="TIPO DE LAMPARA:" />
+        <TextView
+            android:id="@+id/textViewTipoLampara"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TIPO DE LAMPARA:" />
 
-    <Spinner
-        android:id="@+id/spinnerTipoLampara"
-        android:layout_width="fill_parent"
+        <Spinner
+            android:id="@+id/spinnerTipoLampara"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textViewTipoLampara"
-        android:paddingBottom="16dp" />
+        android:layout_below="@id/linearLayout2"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:id="@+id/textViewAltura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ALTURA DE POSTE:" />
+
+        <EditText
+            android:id="@+id/editTextAltura"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/button3"
@@ -75,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/button"
         android:layout_alignBottom="@+id/button"
-        android:layout_below="@id/spinnerTipoLampara"
+        android:layout_below="@id/linearLayout3"
         android:layout_toEndOf="@+id/button"
         android:layout_toRightOf="@+id/button"
         android:onClick="guardarLuminaria"
@@ -87,9 +92,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/spinnerTipoLampara"
+        android:layout_below="@+id/linearLayout3"
         android:onClick="launchCamera"
-        android:text="Foto" />
+        android:text="Tomar Foto" />
 
     <ImageView
         android:id="@+id/imageView"
