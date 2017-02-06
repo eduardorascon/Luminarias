@@ -4,9 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by User on 05/02/2017.
- */
+import com.eduardorascon.luminarias.R;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -22,13 +20,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static DatabaseHandler getInstance(Context context) {
         if (dbInstance == null)
             dbInstance = new DatabaseHandler(context);
-        
+
         return dbInstance;
     }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+    public void onCreate(SQLiteDatabase db) {
+        String CREATE_LUMINARIAS_TABLE = context.getString(R.string.create_table_luminarias);
+        db.execSQL(CREATE_LUMINARIAS_TABLE);
     }
 
     @Override
