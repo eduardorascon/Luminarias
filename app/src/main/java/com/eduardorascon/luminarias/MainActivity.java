@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         textViewLocation = (TextView) findViewById(R.id.textViewLocation);
         imageView = (ImageView) findViewById(R.id.imageView);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        toggleGPSUpdates();
     }
 
     public void guardarLuminaria(View view) {
@@ -81,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (photoFile != null) {
-                Uri photoUri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
+                //Uri photoUri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
+                Uri photoUri = Uri.fromFile(photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, 1);
             }
@@ -166,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void toggleGPSUpdates(View view) {
+    public void toggleGPSUpdates() {
         if (checkLocation() == false)
             return;
 
