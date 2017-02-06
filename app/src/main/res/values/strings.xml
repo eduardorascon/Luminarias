@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Luminarias</string>
-    <string name="create_table_luminarias">create table luminarias(_id integer primary key, lat text, lon text, esta_en text, altura text, tipo_lampara text, date_created datetime default current_timestamp, nombre_imagen text)</string>
+    <string name="create_table_luminarias">create table luminarias(_id integer primary key, lat text, lon text, tipo_poste text, altura text, tipo_lampara text, date_created datetime default current_timestamp, nombre_imagen text)</string>
 </resources>

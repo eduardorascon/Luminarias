@@ -1,5 +1,6 @@
 package com.eduardorascon.luminarias.sqlite;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -22,6 +23,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             dbInstance = new DatabaseHandler(context);
 
         return dbInstance;
+    }
+
+    public void insertLuminaria(Luminaria luminaria) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("lat", luminaria.getLat());
+        contentValues.put("lon", luminaria.getLon());
+        contentValues.put("tipo_poste", luminaria.getTipoPoste());
+        contentValues.put("altura", luminaria.getAltura());
+        contentValues.put("nombre_imagen", luminaria.getImagen());
+        db.insert("luminarias", null, contentValues);
     }
 
     @Override

@@ -12,7 +12,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,10 +21,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DatabaseHandler db = DatabaseHandler.getInstance(this);
+        db.getWritableDatabase();
 
         textViewLocation = (TextView) findViewById(R.id.textViewLocation);
         imageView = (ImageView) findViewById(R.id.imageView);
@@ -74,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, takePictureIntent);
 
         if (resultCode == RESULT_OK && requestCode == 1) {
-            /*if (takePictureIntent == null)
-                return;*/
 
             try {
                 BitmapFactory.Options options = new BitmapFactory.Options();
