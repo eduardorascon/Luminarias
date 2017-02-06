@@ -3,9 +3,8 @@ package com.eduardorascon.luminarias.sqlite;
 public class Luminaria {
     private String imagen;
     private String altura;
-    private String tipoPoste;
-    private String lon;
-    private String lat;
+    private String tipoPoste, tipoLampara;
+    private String lon, lat;
 
     public String getImagen() {
         return imagen;
@@ -45,5 +44,13 @@ public class Luminaria {
 
     public void setLat(String lat) {
         this.lat = lat;
+    }
+
+    public String getTipoLampara() {
+        return tipoLampara;
+    }
+
+    public void setTipoLampara(String tipoLampara) {
+        this.tipoLampara = tipoLampara;
     }
 }

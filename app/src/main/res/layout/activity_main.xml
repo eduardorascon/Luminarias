@@ -37,10 +37,22 @@
         android:onClick="toggleGPSUpdates"
         android:text="GPS" />
 
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button2"
+        android:layout_toEndOf="@+id/button2"
+        android:layout_toRightOf="@+id/button2"
+        android:onClick="guardarLuminaria"
+        android:text="Guardar" />
+
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button" />
+
 
 </RelativeLayout>

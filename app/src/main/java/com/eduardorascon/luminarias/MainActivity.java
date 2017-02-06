@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
+import com.eduardorascon.luminarias.sqlite.Luminaria;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -52,6 +53,21 @@ public class MainActivity extends AppCompatActivity {
         textViewLocation = (TextView) findViewById(R.id.textViewLocation);
         imageView = (ImageView) findViewById(R.id.imageView);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    public void guardarLuminaria(View view) {
+        Luminaria luminaria = new Luminaria();
+        luminaria.setAltura("10");
+        luminaria.setLat(String.valueOf(latitudeGPS));
+        luminaria.setLon(String.valueOf(longitudeGPS));
+        luminaria.setTipoPoste("CFE");
+        luminaria.setTipoLampara("Mercurial");
+        luminaria.setImagen(currentPhotoPath);
+
+        DatabaseHandler db = DatabaseHandler.getInstance(view.getContext());
+        long result = db.insertLuminaria(luminaria);
+
+        textViewLocation.setText(String.valueOf(result));
     }
 
     public void launchCamera(View view) {
@@ -166,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private double longitudeGPS, latitudeGPS;
+    private double longitudeGPS = 0.2d, latitudeGPS = 0.1d;
     private final LocationListener locationListenerGPS = new LocationListener() {
 
         @Override

@@ -25,15 +25,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return dbInstance;
     }
 
-    public void insertLuminaria(Luminaria luminaria) {
+    public long insertLuminaria(Luminaria luminaria) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("lat", luminaria.getLat());
         contentValues.put("lon", luminaria.getLon());
         contentValues.put("tipo_poste", luminaria.getTipoPoste());
+        contentValues.put("tipo_lampara", luminaria.getTipoLampara());
         contentValues.put("altura", luminaria.getAltura());
         contentValues.put("nombre_imagen", luminaria.getImagen());
-        db.insert("luminarias", null, contentValues);
+        return db.insert("luminarias", null, contentValues);
     }
 
     @Override
