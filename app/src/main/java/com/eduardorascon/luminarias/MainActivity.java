@@ -27,7 +27,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
@@ -46,10 +45,20 @@ public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     ImageView imageView;
     EditText editTextAltura;
+    Uri photoUri;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("PHOTO_URI_BUNDLE", photoUri);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null)
+            photoUri = savedInstanceState.getParcelable("PHOTO_URI_BUNDLE");
+
         setContentView(R.layout.activity_main);
 
         askForPermissions();
@@ -85,8 +94,18 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHandler db = DatabaseHandler.getInstance(view.getContext());
         db.insertLuminaria(luminaria);
 
+        resetInput();
         Toast.makeText(this, "Luminaria guardada con éxito", Toast.LENGTH_LONG).show();
         //textViewLocation.setText(String.valueOf(result));
+    }
+
+    private void resetInput() {
+        tipoPosteSpinner.setSelection(0);
+        tipoLamparaSpinner.setSelection(0);
+        latitudeGPS = 0.0d;
+        longitudeGPS = 0.0d;
+        editTextAltura.setText("");
+        imageView.setImageDrawable(null);
     }
 
     private boolean validateInput() {
@@ -130,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (photoFile != null) {
                 //Uri photoUri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
-                Uri photoUri = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", photoFile);
+                photoUri = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", photoFile);
                 //Uri photoUri = Uri.fromFile(photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, 1);
@@ -221,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             return;
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2 * 60 * 1000, 10, locationListenerGPS);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30 * 1000, 8, locationListenerGPS);
         }
     }
 
