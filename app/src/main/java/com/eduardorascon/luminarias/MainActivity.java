@@ -23,9 +23,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     String currentPhotoPath;
     LocationManager locationManager;
     ImageView imageView;
+    EditText editTextAltura;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
         imageView = (ImageView) findViewById(R.id.imageView);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         tipoPosteSpinner = (Spinner) findViewById(R.id.spinnerTipoPoste);
         tipoLamparaSpinner = (Spinner) findViewById(R.id.spinnerTipoLampara);
+        editTextAltura = (EditText) findViewById(R.id.editTextAltura);
+
         loadTipoLamparaSpinner();
         loadTipoPosteSpinner();
 
@@ -63,18 +67,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void guardarLuminaria(View view) {
+
+        if (validateInput() == false)
+            return;
+
         Luminaria luminaria = new Luminaria();
         luminaria.setAltura("10");
         luminaria.setLat(String.valueOf(latitudeGPS));
         luminaria.setLon(String.valueOf(longitudeGPS));
-        luminaria.setTipoPoste("CFE");
-        luminaria.setTipoLampara("Mercurial");
+        luminaria.setTipoPoste(tipoPosteSpinner.getSelectedItem().toString());
+        luminaria.setTipoLampara(tipoLamparaSpinner.getSelectedItem().toString());
         luminaria.setImagen(currentPhotoPath);
 
         DatabaseHandler db = DatabaseHandler.getInstance(view.getContext());
-        long result = db.insertLuminaria(luminaria);
+        db.insertLuminaria(luminaria);
 
+        Toast.makeText(this, "Luminaria guardada con éxito", Toast.LENGTH_LONG).show();
         //textViewLocation.setText(String.valueOf(result));
+    }
+
+    private boolean validateInput() {
+        if (tipoPosteSpinner.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "Tipo de poste no seleccionado", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (tipoLamparaSpinner.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "Tipo de lampara no seleccionado", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (latitudeGPS == 0.0d || longitudeGPS == 0.0d) {
+            Toast.makeText(this, "La ubicación aun no esta calculada", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (editTextAltura.getText().toString() == "") {
+            Toast.makeText(this, "La altura no esta capturada", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (imageView.getDrawable() == null) {
+            Toast.makeText(this, "La fotografia no ha sido tomada", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 
     public void launchCamera(View view) {
