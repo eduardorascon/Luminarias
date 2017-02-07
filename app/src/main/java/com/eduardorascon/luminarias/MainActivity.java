@@ -74,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
         loadTipoLamparaSpinner();
         loadTipoPosteSpinner();
-
-        toggleGPSUpdates();
     }
 
     public void guardarLuminaria(View view) {
@@ -291,18 +289,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void askForPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+    	boolean isCameraPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+        if (isCameraPermissionGranted==false) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
             }
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        boolean isLocationPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        if (isLocationPermissionGranted==false) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
+        }
+
+        toggleGPSUpdates();
+    }
+
+     @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    // Permission Denied
+                    Toast.makeText(MainActivity.this, "WRITE_CONTACTS Denied", Toast.LENGTH_LONG).show();
+                    // Close Activity
+                    finish();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }
