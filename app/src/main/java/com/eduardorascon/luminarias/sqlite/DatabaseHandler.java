@@ -37,6 +37,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return db.insert("luminarias", null, contentValues);
     }
 
+    public List<Luminaria> getAllLuminarias() {
+        List<Luminaria> luminariasList = new ArrayList<>():
+        String  selectAll = "SELECT lat, lon, tipo_poste, tipo_lampara, altura, nombre_imagen, fecha_hora FROM luminarias";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectAll, null);
+
+        if(cursor.moveToFirst() == null)
+            return luminariasList;
+        
+        do {
+            Luminaria l = new Luminaria();
+            l.setLat(cursor.getString(0));//lat
+            l.setLon(cursor.getString(1));//lon
+            l.setTipoPoste(cursor.getString(2));//tipo_poste
+            l.setTipoLampara(cursor.getString(3));//tipo_lampara
+            l.setAltura(cursor.getString(4));//altura
+            l.setImagen(cursor.getString(5));//nombre_imagen
+            l.setFechaHora(cursor.getString(6));//fecha_hora
+        } while (cursor.moveToNext());
+
+        return luminariasList;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LUMINARIAS_TABLE = context.getString(R.string.create_table_luminarias);
