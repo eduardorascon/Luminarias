@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        askForPermissions();
 
         DatabaseHandler db = DatabaseHandler.getInstance(this);
         db.getWritableDatabase();
@@ -127,7 +130,8 @@ public class MainActivity extends AppCompatActivity {
 
             if (photoFile != null) {
                 //Uri photoUri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
-                Uri photoUri = Uri.fromFile(photoFile);
+                Uri photoUri = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", photoFile);
+                //Uri photoUri = Uri.fromFile(photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, 1);
             }
@@ -265,5 +269,21 @@ public class MainActivity extends AppCompatActivity {
                 R.array.tipo_poste_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tipoPosteSpinner.setAdapter(adapter);
+    }
+
+    private void askForPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+            }
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
     }
 }
