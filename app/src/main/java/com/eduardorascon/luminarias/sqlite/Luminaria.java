@@ -5,6 +5,7 @@ public class Luminaria {
     private String altura;
     private String tipoPoste, tipoLampara;
     private String lon, lat;
+    private String fechaHora;
 
     public String getImagen() {
         return imagen;
@@ -52,5 +53,13 @@ public class Luminaria {
 
     public void setTipoLampara(String tipoLampara) {
         this.tipoLampara = tipoLampara;
+    }
+
+    public String getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(String fechaHora) {
+        this.fechaHora = fechaHora;
     }
 }

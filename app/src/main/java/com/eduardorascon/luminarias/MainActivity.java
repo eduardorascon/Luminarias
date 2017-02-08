@@ -22,6 +22,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        askForPermissions();
+        //askForPermissions();
 
         DatabaseHandler db = DatabaseHandler.getInstance(this);
         db.getWritableDatabase();
@@ -71,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         tipoPosteSpinner = (Spinner) findViewById(R.id.spinnerTipoPoste);
         tipoLamparaSpinner = (Spinner) findViewById(R.id.spinnerTipoLampara);
         editTextAltura = (EditText) findViewById(R.id.editTextAltura);
+
+        toggleGPSUpdates();
 
         loadTipoLamparaSpinner();
         loadTipoPosteSpinner();
@@ -290,8 +295,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void askForPermissions() {
 
-    	boolean isCameraPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
-        if (isCameraPermissionGranted==false) {
+        boolean isCameraPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+        if (isCameraPermissionGranted == false) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
@@ -299,17 +304,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         boolean isLocationPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        if (isLocationPermissionGranted==false) {
+        if (isLocationPermissionGranted == false) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
-
-        toggleGPSUpdates();
     }
 
-     @Override
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case 1:
@@ -317,11 +320,32 @@ public class MainActivity extends AppCompatActivity {
                     // Permission Denied
                     Toast.makeText(MainActivity.this, "WRITE_CONTACTS Denied", Toast.LENGTH_LONG).show();
                     // Close Activity
-                    finish();
+                    //finish();
                 }
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.app_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_new:
+                Toast.makeText(this, "NUEVOOO", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.menu_item_cloud_save:
+                Toast.makeText(this, "NUBEEEE", Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

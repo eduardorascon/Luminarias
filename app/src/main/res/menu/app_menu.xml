@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_item_new"
+        android:title="Captura" />
+    <item
+        android:id="@+id/menu_item_cloud_save"
+        android:title="Enviar a servidor" />
+</menu>
