@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        //askForPermissions();
-
         DatabaseHandler db = DatabaseHandler.getInstance(this);
         db.getWritableDatabase();
 
@@ -75,10 +73,10 @@ public class MainActivity extends AppCompatActivity {
         tipoLamparaSpinner = (Spinner) findViewById(R.id.spinnerTipoLampara);
         editTextAltura = (EditText) findViewById(R.id.editTextAltura);
 
-        toggleGPSUpdates();
-
         loadTipoLamparaSpinner();
         loadTipoPosteSpinner();
+
+        askForLocationPermission();
     }
 
     public void guardarLuminaria(View view) {
@@ -141,6 +139,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launchCamera(View view) {
+        if (askForCameraPermission() == false)
+            return;
+
+        launchCameraIntent();
+    }
+
+    private void launchCameraIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
@@ -293,8 +298,7 @@ public class MainActivity extends AppCompatActivity {
         tipoPosteSpinner.setAdapter(adapter);
     }
 
-    private void askForPermissions() {
-
+    private boolean askForCameraPermission() {
         boolean isCameraPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
         if (isCameraPermissionGranted == false) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
@@ -302,26 +306,36 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
             }
         }
+        return isCameraPermissionGranted;
+    }
 
+    private boolean askForLocationPermission() {
         boolean isLocationPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         if (isLocationPermissionGranted == false) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
             }
         }
+        return isLocationPermissionGranted;
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case 1:
+            case 1://CAMERA
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    // Permission Denied
-                    Toast.makeText(MainActivity.this, "WRITE_CONTACTS Denied", Toast.LENGTH_LONG).show();
-                    // Close Activity
-                    //finish();
+                    Toast.makeText(MainActivity.this, "Es necesario contar con el permiso solicitado", Toast.LENGTH_LONG).show();
                 }
+
+                launchCameraIntent();
+                break;
+            case 2://ACCESS_FINE_LOCATION
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(MainActivity.this, "Es necesario contar con el permiso solicitado", Toast.LENGTH_LONG).show();
+                }
+
+                toggleGPSUpdates();
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
