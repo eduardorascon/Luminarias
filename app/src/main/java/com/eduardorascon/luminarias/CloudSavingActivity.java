@@ -16,8 +16,6 @@ import com.eduardorascon.luminarias.sqlite.Luminaria;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.data;
-
 public class CloudSavingActivity extends AppCompatActivity {
 
     @Override
@@ -26,37 +24,63 @@ public class CloudSavingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cloud_saving);
     }
 
-    RequestParams params = new RequestParam();
+    String imgPath;
     private void getImages() {
 
         DatabaseHandler db = DatabaseHandler.getInstance(this);
         List<Luminaria> luminariaList = db.getAllLuminarias();
 
         for (Luminaria l : luminariaList) {
-
+        	imgPath = l.getImage();
+        	if(imgPath!=null && !imgPath.isEmpty()){
+        		//encodeImageToString();
+        		makeHTTPCall();
+        	}
         }
 
-        Uri selectedImage = data.getData();
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+    }
 
-        // Get the cursor
-        Cursor cursor = getContentResolver().query(selectedImage,
-                filePathColumn, null, null, null);
-        // Move to first row
-        cursor.moveToFirst();
+	String encodedString, fileName;
+    public void encodeImagetoString() {
+        new AsyncTask<Void, Void, String>() {
+ 
+            protected void onPreExecute() {
+            	String fileNameSegments[] = imgPath.split("/");
+            	fileName = fileNameSegments[fileNameSegments.length - 1];
+            };
+ 
+            @Override
+            protected String doInBackground(Void... params) {
+                BitmapFactory.Options options = null;
+                options = new BitmapFactory.Options();
+                options.inSampleSize = 3;
+                bitmap = BitmapFactory.decodeFile(imgPath, options);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                // Must compress the Image to reduce image size to make upload easy
+                bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream); 
+                byte[] byte_arr = stream.toByteArray();
+                // Encode Image to String
+                encodedString = Base64.encodeToString(byte_arr, 0);
+                return "";
+            }
+ 
+            @Override
+            protected void onPostExecute(String msg) {
 
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        imgPath = cursor.getString(columnIndex);
-        cursor.close();
-        ImageView imgView = (ImageView) findViewById(R.id.imgView);
-        // Set the Image in ImageView
-        imgView.setImageBitmap(BitmapFactory
-                .decodeFile(imgPath));
-        // Get the Image's file name
-        String fileNameSegments[] = imgPath.split("/");
-        fileName = fileNameSegments[fileNameSegments.length - 1];
-        // Put file name in Async Http Post Param which will used in Php web app
-        params.put("filename", fileName);
+            }
+        }.execute(null, null, null);
+    }
 
+    public void makeHTTPCall() {    
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost("http://luminarias.todoslosbits.com.mx/upload_image.php");
+
+        try{
+        	post.setEntity( new FileEntity(new File(imgPath), "application/octet-stream"));
+        	HttpResponse response = client.execute(post);
+        }
+        catch(ClientProtocolException e){
+
+        }
     }
 }
