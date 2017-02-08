@@ -2,10 +2,14 @@ package com.eduardorascon.luminarias.sqlite;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.eduardorascon.luminarias.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -38,15 +42,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<Luminaria> getAllLuminarias() {
-        List<Luminaria> luminariasList = new ArrayList<>():
-        String  selectAll = "SELECT lat, lon, tipo_poste, tipo_lampara, altura, nombre_imagen, fecha_hora FROM luminarias";
+        List<Luminaria> luminariasList = new ArrayList<>();
+        String selectAll = "SELECT lat, lon, tipo_poste, tipo_lampara, altura, nombre_imagen, fecha_hora FROM luminarias";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectAll, null);
 
-        if(cursor.moveToFirst() == null)
+        if (cursor.moveToFirst() == false)
             return luminariasList;
-        
+
         do {
             Luminaria l = new Luminaria();
             l.setLat(cursor.getString(0));//lat
