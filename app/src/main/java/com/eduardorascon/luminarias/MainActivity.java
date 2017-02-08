@@ -339,10 +339,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_new:
-                Toast.makeText(this, "NUEVOOO", Toast.LENGTH_LONG).show();
+                //Intent intent =new Intent(this, )
                 return true;
             case R.id.menu_item_cloud_save:
-                Toast.makeText(this, "NUBEEEE", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, CloudSavingActivity.class);
+                this.startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
