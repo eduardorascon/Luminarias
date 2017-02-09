@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (latitudeGPS == 0.0d || longitudeGPS == 0.0d) {
+            toggleGPSUpdates();
             Toast.makeText(this, "La ubicación aun no esta calculada", Toast.LENGTH_LONG).show();
             return false;
         }
