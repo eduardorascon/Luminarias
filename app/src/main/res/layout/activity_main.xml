@@ -18,18 +18,23 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
-        android:paddingBottom="16dp">
+        android:paddingBottom="10dp">
 
         <TextView
             android:id="@+id/textViewTipoPoste"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="TIPO DE POSTE:" />
+            android:layout_weight="0.5"
+            android:gravity="start"
+            android:paddingRight="15dp"
+            android:text="TIPO DE POSTE:"
+            android:textAlignment="textStart" />
 
         <Spinner
             android:id="@+id/spinnerTipoPoste"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5" />
     </LinearLayout>
 
     <LinearLayout
@@ -38,18 +43,23 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/linearLayout1"
         android:orientation="horizontal"
-        android:paddingBottom="16dp">
+        android:paddingBottom="10dp">
 
         <TextView
             android:id="@+id/textViewTipoLampara"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="TIPO DE LAMPARA:" />
+            android:layout_weight="0.5"
+            android:gravity="start"
+            android:paddingRight="15dp"
+            android:text="TIPO DE LAMPARA:"
+            android:textAlignment="textStart" />
 
         <Spinner
             android:id="@+id/spinnerTipoLampara"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5" />
     </LinearLayout>
 
     <LinearLayout
@@ -58,48 +68,54 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/linearLayout2"
         android:orientation="horizontal"
-        android:paddingBottom="16dp">
+        android:paddingBottom="10dp">
 
         <TextView
             android:id="@+id/textViewAltura"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="ALTURA DE POSTE:" />
+            android:layout_weight="0.5"
+            android:gravity="start"
+            android:paddingRight="15dp"
+            android:text="ALTURA DE POSTE:"
+            android:textAlignment="textStart" />
 
         <EditText
             android:id="@+id/editTextAltura"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.5"
             android:ems="10"
             android:inputType="numberDecimal" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button"
-        android:layout_alignBottom="@+id/button"
-        android:layout_below="@id/linearLayout3"
-        android:layout_toEndOf="@+id/button"
-        android:layout_toRightOf="@+id/button"
-        android:onClick="guardarLuminaria"
-        android:text="Guardar" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayout3"
-        android:onClick="launchCamera"
-        android:text="Tomar Foto" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button" />
+        android:layout_below="@id/linearLayout3" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="launchCamera"
+            android:text="FOTOGRAFÍA" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="guardarLuminaria"
+            android:text="GUARDAR" />
+    </LinearLayout>
 </RelativeLayout>
