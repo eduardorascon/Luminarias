@@ -33,19 +33,38 @@ public class CloudSavingActivity extends AppCompatActivity {
         DatabaseHandler db = DatabaseHandler.getInstance(this);
         List<Luminaria> luminariaList = db.getAllLuminarias();
 
-        for (Luminaria l : luminariaList) {
-            makeHTTPCall(l.getImagen());
+        for (Luminaria luminaria : luminariaList) {
+            makeHTTPCall(luminaria);
         }
     }
 
-    private void makeHTTPCall(final String imgPath) {
+    private void makeHTTPCall(final Luminaria luminaria) {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
-                sendFileToServer(imgPath, "http://luminarias.todoslosbits.com.mx/upload_image.php");
+                String responseFile = "";
+                if (luminaria.getRespaldoImagen() == 0)
+                    responseFile = sendFileToServer(luminaria.getImagen(), "http://luminarias.todoslosbits.com.mx/upload_image.php");
+
+                if (luminaria.getRespaldoImagen() > 0 || responseFile == "200") {
+                    DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+
+                    if (luminaria.getRespaldoImagen() == 0)
+                        db.updateLuminariaRespladoImagen(luminaria);
+
+                    //Falta revisar como se va a mandar la info al servidor... que parametros tiene que tener...
+                    String responseData = sendDataToServer();
+                    if (responseData == "200")
+                        db.updateLuminariaRespaldoDatos(luminaria);
+                }
+
                 return "";
             }
         }.execute(null, null, null);
+    }
+
+    private String sendDataToServer() {
+        return "";
     }
 
     private String sendFileToServer(String filename, String targetUrl) {
