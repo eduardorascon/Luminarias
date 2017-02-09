@@ -1,11 +1,13 @@
 package com.eduardorascon.luminarias.sqlite;
 
 public class Luminaria {
+    private int id;
     private String imagen;
     private String altura;
     private String tipoPoste, tipoLampara;
     private String lon, lat;
     private String fechaHora;
+    private int respladoDatos, respaldoImagen;
 
     public String getImagen() {
         return imagen;
@@ -61,5 +63,29 @@ public class Luminaria {
 
     public void setFechaHora(String fechaHora) {
         this.fechaHora = fechaHora;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getRespladoDatos() {
+        return respladoDatos;
+    }
+
+    public void setRespladoDatos(int respladoDatos) {
+        this.respladoDatos = respladoDatos;
+    }
+
+    public int getRespaldoImagen() {
+        return respaldoImagen;
+    }
+
+    public void setRespaldoImagen(int respaldoImagen) {
+        this.respaldoImagen = respaldoImagen;
     }
 }
