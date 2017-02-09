@@ -93,7 +93,8 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/linearLayout3" />
+        android:layout_below="@id/linearLayout3"
+        android:layout_marginBottom="60dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout4"
@@ -115,6 +116,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:textColor="#ffffff"
+            android:backgroundTint="@color/colorPrimary"
             android:onClick="guardarLuminaria"
             android:text="GUARDAR" />
     </LinearLayout>
