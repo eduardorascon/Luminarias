@@ -40,7 +40,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".CloudSavingActivity"></activity>
+        <activity
+            android:name=".CloudSavingActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

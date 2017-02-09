@@ -353,9 +353,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_new:
-                //Intent intent =new Intent(this, )
-                return true;
             case R.id.menu_item_cloud_save:
                 Intent intent = new Intent(this, CloudSavingActivity.class);
                 this.startActivity(intent);

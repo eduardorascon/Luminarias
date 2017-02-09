@@ -28,13 +28,13 @@ public class CloudSavingActivity extends AppCompatActivity {
     }
 
     public void getImages(View view) {
+        view.setEnabled(false);
 
         DatabaseHandler db = DatabaseHandler.getInstance(this);
         List<Luminaria> luminariaList = db.getAllLuminarias();
 
         for (Luminaria l : luminariaList) {
             makeHTTPCall(l.getImagen());
-
         }
     }
 

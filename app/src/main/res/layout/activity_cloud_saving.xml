@@ -14,8 +14,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="25dp"
+        android:backgroundTint="@color/colorPrimary"
         android:onClick="getImages"
-        android:text="Upload" />
+        android:text="Upload"
+        android:textColor="#FFFFFF" />
 
 </RelativeLayout>
