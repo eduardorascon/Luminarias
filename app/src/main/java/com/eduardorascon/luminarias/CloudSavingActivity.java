@@ -9,15 +9,26 @@ import android.view.View;
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class CloudSavingActivity extends AppCompatActivity {
 
@@ -46,15 +57,14 @@ public class CloudSavingActivity extends AppCompatActivity {
                 if (luminaria.getRespaldoImagen() == 0)
                     responseFile = sendFileToServer(luminaria.getImagen(), "http://luminarias.todoslosbits.com.mx/upload_image.php");
 
-                if (luminaria.getRespaldoImagen() > 0 || responseFile == "200") {
+                if (luminaria.getRespaldoImagen() > 0 || responseFile.equals("200")) {
                     DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
 
-                    if (luminaria.getRespaldoImagen() == 0)
-                        db.updateLuminariaRespladoImagen(luminaria);
+                    /*if (luminaria.getRespaldoImagen() == 0)
+                        db.updateLuminariaRespladoImagen(luminaria);*/
 
-                    //Falta revisar como se va a mandar la info al servidor... que parametros tiene que tener...
-                    String responseData = sendDataToServer();
-                    if (responseData == "200")
+                    String responseData = sendDataToServer(luminaria);
+                    if (responseData.equals("200"))
                         db.updateLuminariaRespaldoDatos(luminaria);
                 }
 
@@ -63,8 +73,49 @@ public class CloudSavingActivity extends AppCompatActivity {
         }.execute(null, null, null);
     }
 
-    private String sendDataToServer() {
-        return "";
+    private String sendDataToServer(Luminaria luminaria) {
+        URL url;
+        String response = "";
+        try {
+            url = new URL("http://luminarias.todoslosbits.com.mx/upload_data.php");
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(15000);
+            conn.setConnectTimeout(15000);
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            writer.write(getPostDataString(luminaria));
+
+            writer.flush();
+            writer.close();
+            os.close();
+            int responseCode = conn.getResponseCode();
+
+            if (responseCode == HttpsURLConnection.HTTP_OK) {
+                response = String.valueOf(responseCode);
+            } else {
+                response = "error";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    private String getPostDataString(Luminaria luminaria) throws UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+        result.append(URLEncoder.encode("lat", "UTF-8")).append("=");
+        result.append(URLEncoder.encode(luminaria.getLat(), "UTF-8")).append("&");
+        result.append(URLEncoder.encode("lon", "UTF-8")).append("=");
+        result.append(URLEncoder.encode(luminaria.getLon(), "UTF-8")).append("&");
+        result.append(URLEncoder.encode("fecha_hora", "UTF-8")).append("=");
+        result.append(URLEncoder.encode(luminaria.getFechaHora(), "UTF-8"));
+        return result.toString();
     }
 
     private String sendFileToServer(String filename, String targetUrl) {
@@ -79,7 +130,6 @@ public class CloudSavingActivity extends AppCompatActivity {
         String lineEnd = "\r\n";
         String twoHyphens = "--";
         String boundary = "*****";
-        DateFormat df = new SimpleDateFormat("yyyy_MM_dd_HH:mm:ss");
 
         int bytesRead, bytesAvailable, bufferSize;
         byte[] buffer;
@@ -136,31 +186,12 @@ public class CloudSavingActivity extends AppCompatActivity {
                 return response;
             }
             outputStream.writeBytes(lineEnd);
-            outputStream.writeBytes(twoHyphens + boundary + twoHyphens
-                    + lineEnd);
+            outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
             // Responses from the server (code and message)
             int serverResponseCode = connection.getResponseCode();
-            String serverResponseMessage = connection.getResponseMessage();
-            Log.i("Server Response Code ", "" + serverResponseCode);
-            Log.i("Server Response Message", serverResponseMessage);
-
-            if (serverResponseCode == 200) {
-                response = "true";
-            }
-
-            String CDate = null;
-            Date serverTime = new Date(connection.getDate());
-            try {
-                CDate = df.format(serverTime);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("Date Exception", e.getMessage() + " Parse Exception");
-            }
-            Log.i("Server Response Time", CDate + "");
-
-            filename = CDate + filename.substring(filename.lastIndexOf("."), filename.length());
-            Log.i("File Name in Server : ", filename);
+            if (serverResponseCode == HttpURLConnection.HTTP_OK)
+                response = String.valueOf(serverResponseCode);
 
             fileInputStream.close();
             outputStream.flush();

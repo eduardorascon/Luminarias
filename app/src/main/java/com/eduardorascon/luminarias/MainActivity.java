@@ -54,15 +54,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("PHOTO_URI_BUNDLE", photoUri);
-        outState.putParcelable("CURRENT_PHOTO_PATH_BUNDLE", currentPhotoPath);
+        outState.putString("CURRENT_PHOTO_PATH_BUNDLE", currentPhotoPath);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             photoUri = savedInstanceState.getParcelable("PHOTO_URI_BUNDLE");
-            currentPhotoPath = savedInstanceState.getParcelable("CURRENT_PHOTO_PATH_BUNDLE");
+            currentPhotoPath = savedInstanceState.getString("CURRENT_PHOTO_PATH_BUNDLE");
         }
 
         setContentView(R.layout.activity_main);
