@@ -9,24 +9,17 @@ import android.view.View;
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -60,8 +53,8 @@ public class CloudSavingActivity extends AppCompatActivity {
                 if (luminaria.getRespaldoImagen() > 0 || responseFile.equals("200")) {
                     DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
 
-                    /*if (luminaria.getRespaldoImagen() == 0)
-                        db.updateLuminariaRespladoImagen(luminaria);*/
+                    if (luminaria.getRespaldoImagen() == 0)
+                        db.updateLuminariaRespladoImagen(luminaria);
 
                     String responseData = sendDataToServer(luminaria);
                     if (responseData.equals("200"))
