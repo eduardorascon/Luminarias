@@ -9,7 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.location.Location;
-import android.location.LocationListener;
+//import android.location.LocationListener;
+import com.google.android.gms.location.LocationListener
 import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -58,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume(){
+    	askForLocationPermission();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
@@ -79,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         loadTipoLamparaSpinner();
         loadTipoPosteSpinner();
 
-        askForLocationPermission();
+        //askForLocationPermission();
     }
 
     public void guardarLuminaria(View view) {
@@ -252,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
             return;
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30 * 1000, 8, locationListenerGPS);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10 * 1000, 5, locationListenerGPS);
         }
     }
 
@@ -315,12 +321,17 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean askForLocationPermission() {
         boolean isLocationPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        if (isLocationPermissionGranted == false) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
-            }
+
+        if(isLocationPermissionGranted){
+        	toggleGPSUpdates();
+        	return true;
         }
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
+        }
+
         return isLocationPermissionGranted;
     }
 
