@@ -9,8 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.location.Location;
-//import android.location.LocationListener;
-import com.google.android.gms.location.LocationListener
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -59,8 +58,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume(){
-    	askForLocationPermission();
+    protected void onResume() {
+        super.onResume();
+        askForLocationPermission();
     }
 
     @Override
@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
         resetInput();
         Toast.makeText(this, "Luminaria guardada con éxito", Toast.LENGTH_LONG).show();
-        //textViewLocation.setText(String.valueOf(result));
     }
 
     private void resetInput() {
@@ -322,9 +321,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean askForLocationPermission() {
         boolean isLocationPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
-        if(isLocationPermissionGranted){
-        	toggleGPSUpdates();
-        	return true;
+        if (isLocationPermissionGranted) {
+            toggleGPSUpdates();
+            return true;
         }
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
