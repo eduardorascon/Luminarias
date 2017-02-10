@@ -37,9 +37,11 @@ public class CloudSavingActivity extends AppCompatActivity {
         DatabaseHandler db = DatabaseHandler.getInstance(this);
         List<Luminaria> luminariaList = db.getAllLuminarias();
 
-        for (Luminaria luminaria : luminariaList) {
+        for (Luminaria luminaria : luminariaList)
             makeHTTPCall(luminaria);
-        }
+
+        //Close activity when finished.
+        finish();
     }
 
     private void makeHTTPCall(final Luminaria luminaria) {
