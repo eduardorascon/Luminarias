@@ -16,7 +16,7 @@
         android:layout_alignParentBottom="true"
         android:backgroundTint="@color/colorPrimary"
         android:onClick="getImages"
-        android:text="Upload"
+        android:text="SUBIR INFORMACIÓN"
         android:textColor="#FFFFFF" />
 
 </RelativeLayout>
