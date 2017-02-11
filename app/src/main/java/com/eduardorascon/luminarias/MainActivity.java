@@ -14,7 +14,6 @@ import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -80,12 +79,9 @@ public class MainActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         tipoPosteSpinner = (Spinner) findViewById(R.id.spinnerTipoPoste);
         tipoLamparaSpinner = (Spinner) findViewById(R.id.spinnerTipoLampara);
-        editTextAltura = (EditText) findViewById(R.id.editTextAltura);
 
         loadTipoLamparaSpinner();
         loadTipoPosteSpinner();
-
-        //askForLocationPermission();
     }
 
     public void guardarLuminaria(View view) {
@@ -94,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
             return;
 
         Luminaria luminaria = new Luminaria();
-        luminaria.setAltura("10");
         luminaria.setLat(String.valueOf(latitudeGPS));
         luminaria.setLon(String.valueOf(longitudeGPS));
         luminaria.setTipoPoste(tipoPosteSpinner.getSelectedItem().toString());

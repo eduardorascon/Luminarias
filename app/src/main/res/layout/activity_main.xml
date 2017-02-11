@@ -24,17 +24,17 @@
             android:id="@+id/textViewTipoPoste"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="0.3"
             android:gravity="start"
-            android:paddingRight="15dp"
-            android:text="TIPO DE POSTE:"
+            android:paddingRight="18dp"
+            android:text="POSTE:"
             android:textAlignment="textStart" />
 
         <Spinner
             android:id="@+id/spinnerTipoPoste"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.7" />
     </LinearLayout>
 
     <LinearLayout
@@ -49,17 +49,17 @@
             android:id="@+id/textViewTipoLampara"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="0.3"
             android:gravity="start"
-            android:paddingRight="15dp"
-            android:text="TIPO DE LAMPARA:"
+            android:paddingRight="18dp"
+            android:text="LAMPARA:"
             android:textAlignment="textStart" />
 
         <Spinner
             android:id="@+id/spinnerTipoLampara"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.7" />
     </LinearLayout>
 
     <LinearLayout
@@ -80,13 +80,6 @@
             android:text="ALTURA DE POSTE:"
             android:textAlignment="textStart" />
 
-        <EditText
-            android:id="@+id/editTextAltura"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:ems="10"
-            android:inputType="numberDecimal" />
     </LinearLayout>
 
     <ImageView
