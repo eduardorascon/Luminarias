@@ -155,28 +155,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void launchCameraIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException e) {
-                //e.printStackTrace();
-            }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getPackageManager()) == null)
+            return;
 
-            if (photoFile != null) {
-                //Uri photoUri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
-                photoUri = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", photoFile);
-                //Uri photoUri = Uri.fromFile(photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                startActivityForResult(takePictureIntent, 1);
-            }
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException e) {
+            //e.printStackTrace();
+        }
+
+        if (photoFile != null) {
+            //Uri photoUri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
+            //photoUri = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", photoFile);
+            //Uri photoUri = Uri.fromFile(photoFile);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            startActivityForResult(intent, 1);
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent takePictureIntent) {
-        super.onActivityResult(requestCode, resultCode, takePictureIntent);
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
 
         if (resultCode == RESULT_OK && requestCode == 1) {
 
@@ -216,9 +219,11 @@ public class MainActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         String imageFileName = "L_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        File storageDir = new File(this.getFilesDir(), "Pictures");
+        storageDir.mkdirs();
+        File image = new File(storageDir, imageFileName + ".jpg");
         currentPhotoPath = image.getAbsolutePath();
+        photoUri = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", image);
         return image;
     }
 
