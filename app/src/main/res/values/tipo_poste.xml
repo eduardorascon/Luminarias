@@ -2,12 +2,28 @@
 <resources>
     <string-array name="tipo_poste_array">
         <item>ELIGE POSTE...</item>
-        <item>CFE</item>
-        <item>MUNICIPAL</item>
+        <item>poste metalico  conico octagonal, con brazo de 11 mts</item>
+        <item>poste metalico conico octagonal, con doble brazo de 11 mts</item>
+        <item>poste metalico conico octagonal con brazo de 9 mts</item>
+        <item>poste metalico conico octagonal con doble brazo de 9 mts</item>
+        <item>poste metalico conico circular punta poste de 7.5 mts</item>
+        <item>poste metalico conico circular punta poste de 6 mts</item>
+        <item>poste metalico con doble brazo de 11 mts</item>
+        <item>poste metalico con un  brazo de 11 mts</item>
+        <item>poste metalico con doble brazo de 9 mts</item>
+        <item>poste metalico con un  brazo de 9 mts</item>
+        <item>poste metalico punta poste de 5 a 7.5 mts para su correcta instalacion</item>
+        <item>poste conico circular con brazo, de 12 mts</item>
+        <item>poste conico circular con doble brazo, de 12 mts</item>
+        <item>poste tipo colonial mexicano</item>
+        <item>WAL PACK PARQUES</item>
+        <item>WAL PACK PUENTES</item>
     </string-array>
     <string-array name="tipo_lampara_array">
         <item>ELIGE LAMPARA...</item>
-        <item>MERCURIAL</item>
-        <item>NATURAL</item>
+        <item>VSAP</item>
+        <item>PIA</item>
+        <item>LED</item>
+        <item>INDUCCION MAGNETICA</item>
     </string-array>
 </resources>
