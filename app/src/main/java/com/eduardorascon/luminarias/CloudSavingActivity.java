@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
@@ -165,6 +166,11 @@ public class CloudSavingActivity extends AppCompatActivity {
                 }*/
 
                 return responseFile;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                Toast.makeText(getApplicationContext(), "INFORMACION ENVIADA AL SERVIDOR", Toast.LENGTH_LONG).show();
             }
         }.execute(null, null, null);
     }
