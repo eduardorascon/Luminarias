@@ -20,7 +20,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="USUARIO:" />
+            android:gravity="start"
+            android:text="USUARIO:"
+            android:textAlignment="textStart"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editTextUser"
@@ -30,7 +33,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="CONTRASEÑA:" />
+            android:gravity="start"
+            android:text="CONTRASEÑA:"
+            android:textAlignment="textStart"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editTextPass"

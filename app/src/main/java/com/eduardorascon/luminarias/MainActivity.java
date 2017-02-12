@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     String currentPhotoPath;
     LocationManager locationManager;
     ImageView imageView;
-    TextView textViewWattValue;
+    TextView textViewTipoLampara;
     Uri photoUri;
 
     @Override
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         tipoPosteSpinner = (Spinner) findViewById(R.id.spinnerTipoPoste);
         tipoLamparaSpinner = (Spinner) findViewById(R.id.spinnerTipoLampara);
-        textViewWattValue = (TextView) findViewById(R.id.textViewWattValue);
+        textViewTipoLampara = (TextView) findViewById(R.id.textViewTipoLampara);
 
         loadTipoLamparaSpinner();
         loadTipoPosteSpinner();
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         tipoLamparaSpinner.setSelection(0);
         latitudeGPS = 0.0d;
         longitudeGPS = 0.0d;
-        textViewWattValue.setText("");
+        textViewTipoLampara.setText("LAMPARA:");
         imageView.setImageDrawable(null);
     }
 
@@ -313,9 +313,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void loadTipoLamparaSpinner() {
-        //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.tipo_lampara_array, android.R.layout.simple_spinner_item);
-        //adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        //tipoLamparaSpinner.setAdapter(adapter);
         tipoLamparaSpinner.setAdapter(new WrapAdapter(this, getResources().getStringArray(R.array.tipo_lampara_array)));
         tipoLamparaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -331,9 +328,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadTipoPosteSpinner() {
-        //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.tipo_poste_array, android.R.layout.simple_spinner_item);
-        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //tipoPosteSpinner.setAdapter(adapter);
         tipoPosteSpinner.setAdapter(new WrapAdapter(this, getResources().getStringArray(R.array.tipo_poste_array)));
         tipoPosteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -431,8 +425,10 @@ public class MainActivity extends AppCompatActivity {
         int selectedLampara = tipoLamparaSpinner.getSelectedItemPosition();
         int selectedPost = tipoPosteSpinner.getSelectedItemPosition();
 
-        if (selectedLampara == 0 || selectedPost == 0)
+        if (selectedLampara == 0 || selectedPost == 0) {
+            textViewTipoLampara.setText("LAMPARA:");
             return;
+        }
 
         String watts = "";
         switch (selectedPost) {
@@ -678,7 +674,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        textViewWattValue.setText(watts);
+        textViewTipoLampara.setText("LAMPARA (" + watts + ")");
     }
 
     class WrapAdapter extends ArrayAdapter<String> {
