@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -164,13 +165,10 @@ public class MainActivity extends AppCompatActivity {
         try {
             photoFile = createImageFile();
         } catch (IOException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
 
         if (photoFile != null) {
-            //Uri photoUri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
-            //photoUri = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", photoFile);
-            //Uri photoUri = Uri.fromFile(photoFile);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
@@ -220,12 +218,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
-        String imageFileName = "L_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File storageDir = new File(this.getFilesDir(), "Pictures");
-        storageDir.mkdirs();
-        File image = new File(storageDir, imageFileName + ".jpg");
-        currentPhotoPath = image.getAbsolutePath();
+        File path = new File(getFilesDir(), "Pictures/");
+        if (!path.exists()) path.mkdirs();
+        String imageFileName = "L_" + System.currentTimeMillis() + ".jpg";
+        File image = new File(path, imageFileName);
         photoUri = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", image);
+        currentPhotoPath = image.getPath();
         return image;
     }
 
@@ -303,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
     public void loadTipoLamparaSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.tipo_lampara_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         tipoLamparaSpinner.setAdapter(adapter);
         tipoLamparaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
