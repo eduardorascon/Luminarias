@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && requestCode == 1) {
 
-            //galleryAddPic();
+            galleryAddPic();
 
             try {
                 ExifInterface exif = new ExifInterface(currentPhotoPath);
