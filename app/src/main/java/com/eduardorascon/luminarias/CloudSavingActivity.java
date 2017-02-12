@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
@@ -35,6 +36,7 @@ public class CloudSavingActivity extends AppCompatActivity {
     EditText editTextUser, editTextPass;
     Button buttonLogin, buttonSave;
     String user;
+    LinearLayout llLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,8 @@ public class CloudSavingActivity extends AppCompatActivity {
 
         editTextUser = (EditText) findViewById(R.id.editTextUser);
         editTextPass = (EditText) findViewById(R.id.editTextPass);
+
+        llLogin = (LinearLayout) findViewById(R.id.linearLayoutLogin);
 
         buttonSave = (AppCompatButton) findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +75,10 @@ public class CloudSavingActivity extends AppCompatActivity {
             editTextPass.setEnabled(false);
             buttonLogin.setEnabled(false);
             user = editTextUser.getText().toString();
+            buttonSave.setVisibility(View.VISIBLE);
             buttonSave.setEnabled(true);
+            buttonLogin.setEnabled(false);
+            llLogin.setVisibility(View.GONE);
         } else {
             editTextUser.setText("");
             editTextPass.setText("");

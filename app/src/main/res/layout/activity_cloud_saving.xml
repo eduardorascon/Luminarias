@@ -12,6 +12,7 @@
     tools:context="com.eduardorascon.luminarias.CloudSavingActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayoutLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -54,6 +55,7 @@
         android:enabled="false"
         android:text="SUBIR INFORMACIÓN"
         android:textColor="#FFFFFF"
+        android:visibility="gone"
         app:backgroundTint="@color/colorPrimary" />
 
 </RelativeLayout>
