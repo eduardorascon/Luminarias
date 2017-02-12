@@ -28,7 +28,8 @@
             android:gravity="start"
             android:paddingRight="18dp"
             android:text="POSTE:"
-            android:textAlignment="textStart" />
+            android:textAlignment="textStart"
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spinnerTipoPoste"
@@ -53,7 +54,8 @@
             android:gravity="start"
             android:paddingRight="18dp"
             android:text="LAMPARA:"
-            android:textAlignment="textStart" />
+            android:textAlignment="textStart"
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spinnerTipoLampara"
@@ -71,13 +73,23 @@
         android:paddingBottom="10dp">
 
         <TextView
-            android:id="@+id/textViewAltura"
+            android:id="@+id/textViewWatt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="0.3"
             android:gravity="start"
-            android:paddingRight="15dp"
-            android:text="ALTURA DE POSTE:"
+            android:paddingRight="18dp"
+            android:text="WATT:"
+            android:textAlignment="textStart"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewWattValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:gravity="start"
+            android:text=""
             android:textAlignment="textStart" />
 
     </LinearLayout>
@@ -109,9 +121,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:textColor="#ffffff"
             android:backgroundTint="@color/colorPrimary"
             android:onClick="guardarLuminaria"
-            android:text="GUARDAR" />
+            android:text="GUARDAR"
+            android:textColor="#ffffff" />
     </LinearLayout>
 </RelativeLayout>

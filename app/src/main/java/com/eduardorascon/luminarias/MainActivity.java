@@ -25,10 +25,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     String currentPhotoPath;
     LocationManager locationManager;
     ImageView imageView;
-    EditText editTextAltura;
+    TextView textViewWattValue;
     Uri photoUri;
 
     @Override
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         tipoPosteSpinner = (Spinner) findViewById(R.id.spinnerTipoPoste);
         tipoLamparaSpinner = (Spinner) findViewById(R.id.spinnerTipoLampara);
+        textViewWattValue = (TextView) findViewById(R.id.textViewWattValue);
 
         loadTipoLamparaSpinner();
         loadTipoPosteSpinner();
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         tipoLamparaSpinner.setSelection(0);
         latitudeGPS = 0.0d;
         longitudeGPS = 0.0d;
-        editTextAltura.setText("");
+        textViewWattValue.setText("");
         imageView.setImageDrawable(null);
     }
 
@@ -126,11 +128,6 @@ public class MainActivity extends AppCompatActivity {
         if (latitudeGPS == 0.0d || longitudeGPS == 0.0d) {
             toggleGPSUpdates();
             Toast.makeText(this, "La ubicación aun no esta calculada", Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        if (editTextAltura.getText().toString() == "") {
-            Toast.makeText(this, "La altura no esta capturada", Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -298,6 +295,17 @@ public class MainActivity extends AppCompatActivity {
                 R.array.tipo_lampara_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tipoLamparaSpinner.setAdapter(adapter);
+        tipoLamparaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                calculateWatt();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     public void loadTipoPosteSpinner() {
@@ -305,6 +313,17 @@ public class MainActivity extends AppCompatActivity {
                 R.array.tipo_poste_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tipoPosteSpinner.setAdapter(adapter);
+        tipoPosteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                calculateWatt();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private boolean askForCameraPermission() {
@@ -373,5 +392,259 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void calculateWatt() {
+        int selectedLampara = tipoLamparaSpinner.getSelectedItemPosition();
+        int selectedPost = tipoPosteSpinner.getSelectedItemPosition();
+
+        if (selectedLampara == 0 || selectedPost == 0)
+            return;
+
+        String watts = "";
+        switch (selectedPost) {
+            case 1:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "400W";
+                        break;
+                    case 2:
+                        watts = "275W";
+                        break;
+                    case 3:
+                        watts = "150W";
+                        break;
+                    case 4:
+                        watts = "175W";
+                        break;
+                }
+                break;
+            case 2:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "400W";
+                        break;
+                    case 2:
+                        watts = "275W";
+                        break;
+                    case 3:
+                        watts = "150W";
+                        break;
+                    case 4:
+                        watts = "175W";
+                        break;
+                }
+                break;
+            case 3:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "250W";
+                        break;
+                    case 2:
+                        watts = "150W";
+                        break;
+                    case 3:
+                        watts = "100W";
+                        break;
+                    case 4:
+                        watts = "125W";
+                        break;
+                }
+                break;
+            case 4:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "250W";
+                        break;
+                    case 2:
+                        watts = "150W";
+                        break;
+                    case 3:
+                        watts = "100W";
+                        break;
+                    case 4:
+                        watts = "125W";
+                        break;
+                }
+                break;
+            case 5:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "100W";
+                        break;
+                    case 2:
+                        watts = "75W";
+                        break;
+                    case 3:
+                        watts = "45W";
+                        break;
+                    case 4:
+                        watts = "50W";
+                        break;
+                }
+                break;
+            case 6:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "100W";
+                        break;
+                    case 2:
+                        watts = "75W";
+                        break;
+                    case 3:
+                        watts = "45W";
+                        break;
+                    case 4:
+                        watts = "50W";
+                        break;
+                }
+                break;
+            case 7:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "400W";
+                        break;
+                    case 2:
+                        watts = "275W";
+                        break;
+                    case 3:
+                        watts = "150W";
+                        break;
+                    case 4:
+                        watts = "175W";
+                        break;
+                }
+                break;
+            case 8:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "400W";
+                        break;
+                    case 2:
+                        watts = "275W";
+                        break;
+                    case 3:
+                        watts = "150W";
+                        break;
+                    case 4:
+                        watts = "175W";
+                        break;
+                }
+                break;
+            case 9:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "250W";
+                        break;
+                    case 2:
+                        watts = "150W";
+                        break;
+                    case 3:
+                        watts = "100W";
+                        break;
+                    case 4:
+                        watts = "125W";
+                        break;
+                }
+                break;
+            case 10:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "250W";
+                        break;
+                    case 2:
+                        watts = "150W";
+                        break;
+                    case 3:
+                        watts = "100W";
+                        break;
+                    case 4:
+                        watts = "125W";
+                        break;
+                }
+                break;
+            case 11:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "100W";
+                        break;
+                    case 2:
+                        watts = "75W";
+                        break;
+                    case 3:
+                        watts = "45W";
+                        break;
+                    case 4:
+                        watts = "50W";
+                        break;
+                }
+                break;
+            case 12:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "100W";
+                        break;
+                    case 2:
+                        watts = "75W";
+                        break;
+                    case 3:
+                        watts = "45W";
+                        break;
+                    case 4:
+                        watts = "50W";
+                        break;
+                }
+                break;
+            case 13:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "100W";
+                        break;
+                    case 2:
+                        watts = "75W";
+                        break;
+                    case 3:
+                        watts = "45W";
+                        break;
+                    case 4:
+                        watts = "50W";
+                        break;
+                }
+                break;
+            case 14:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "100W";
+                        break;
+                    case 2:
+                        watts = "75W";
+                        break;
+                    case 3:
+                        watts = "45W";
+                        break;
+                    case 4:
+                        watts = "50W";
+                        break;
+                }
+                break;
+            case 15:
+                switch (selectedLampara) {
+                    case 1:
+                        watts = "250W";
+                        break;
+                    case 2:
+                        watts = "150W";
+                        break;
+                    case 3:
+                        watts = "100W";
+                        break;
+                    case 4:
+                        watts = "125W";
+                        break;
+                }
+                break;
+        }
+
+        textViewWattValue.setText(watts);
     }
 }
