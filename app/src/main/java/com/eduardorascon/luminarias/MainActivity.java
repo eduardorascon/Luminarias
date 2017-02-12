@@ -99,10 +99,10 @@ public class MainActivity extends AppCompatActivity {
         luminaria.setImagen(currentPhotoPath);
 
         DatabaseHandler db = DatabaseHandler.getInstance(view.getContext());
-        db.insertLuminaria(luminaria);
+        long registro = db.insertLuminaria(luminaria);
 
         resetInput();
-        Toast.makeText(this, "Luminaria guardada con éxito", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Luminaria (" + registro + ") guardada con éxito", Toast.LENGTH_LONG).show();
     }
 
     private void resetInput() {
@@ -196,7 +196,8 @@ public class MainActivity extends AppCompatActivity {
 
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = 2;
-                Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(currentPhotoPath), null, options);
+                FileInputStream fileInputStream = new FileInputStream(new File(currentPhotoPath));
+                Bitmap bmp = BitmapFactory.decodeStream(fileInputStream, null, options);
                 Bitmap bitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, new ByteArrayOutputStream());
                 imageView.setImageBitmap(bitmap);

@@ -50,7 +50,7 @@ public class CloudSavingActivity extends AppCompatActivity {
             protected String doInBackground(Void... voids) {
                 String responseFile = "";
                 if (luminaria.getRespaldoImagen() == 0)
-                    responseFile = sendFileToServer(luminaria.getImagen(), "http://luminarias.todoslosbits.com.mx/upload_image.php");
+                    responseFile = sendFileToServer(luminaria.getImagen());
 
                 if (luminaria.getRespaldoImagen() > 0 || responseFile.equals("200")) {
                     DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
@@ -113,15 +113,13 @@ public class CloudSavingActivity extends AppCompatActivity {
         return result.toString();
     }
 
-    private String sendFileToServer(String filename, String targetUrl) {
+    private String sendFileToServer(String filename) {
         String response = "error";
         Log.e("Image filename", filename);
-        Log.e("url", targetUrl);
         HttpURLConnection connection = null;
         DataOutputStream outputStream = null;
 
         String pathToOurFile = filename;
-        String urlServer = targetUrl;
         String lineEnd = "\r\n";
         String twoHyphens = "--";
         String boundary = "*****";
@@ -131,8 +129,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         int maxBufferSize = 1 * 1024;
         try {
             FileInputStream fileInputStream = new FileInputStream(new File(pathToOurFile));
-
-            URL url = new URL(urlServer);
+            URL url = new URL("http://luminarias.todoslosbits.com.mx/upload_image.php");
             connection = (HttpURLConnection) url.openConnection();
 
             // Allow Inputs & Outputs
