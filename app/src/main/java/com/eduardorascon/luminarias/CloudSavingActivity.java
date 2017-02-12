@@ -7,14 +7,19 @@ import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -27,18 +32,97 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class CloudSavingActivity extends AppCompatActivity {
 
+    EditText editTextUser, editTextPass;
+    Button buttonLogin, buttonSave;
+    String user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cloud_saving);
 
-        Button button = (AppCompatButton) findViewById(R.id.buttonSave);
-        button.setOnClickListener(new View.OnClickListener() {
+        editTextUser = (EditText) findViewById(R.id.editTextUser);
+        editTextPass = (EditText) findViewById(R.id.editTextPass);
+
+        buttonSave = (AppCompatButton) findViewById(R.id.buttonSave);
+        buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getImages(view);
             }
         });
+
+        buttonLogin = (AppCompatButton) findViewById(R.id.buttonLogin);
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkUser(view);
+            }
+        });
+    }
+
+    private void checkUser(View view) {
+        validateUser(editTextUser.getText().toString(), editTextPass.getText().toString());
+    }
+
+    private void validateResult(String result) {
+        if (result.equals("s")) {
+            editTextUser.setEnabled(false);
+            editTextPass.setEnabled(false);
+            buttonLogin.setEnabled(false);
+            user = editTextUser.getText().toString();
+            buttonSave.setEnabled(true);
+        } else {
+            editTextUser.setText("");
+            editTextPass.setText("");
+        }
+    }
+
+    private void validateUser(final String user, final String pass) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                String response = "";
+                try {
+                    URL url = new URL("http://luminarias.todoslosbits.com.mx/check_user.php");
+
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setReadTimeout(15000);
+                    conn.setConnectTimeout(15000);
+                    conn.setRequestMethod("POST");
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
+
+                    OutputStream os = conn.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+
+                    StringBuilder result = new StringBuilder();
+                    result.append(URLEncoder.encode("user", "UTF-8")).append("=");
+                    result.append(URLEncoder.encode(user, "UTF-8")).append("&");
+                    result.append(URLEncoder.encode("pass", "UTF-8")).append("=");
+                    result.append(URLEncoder.encode(pass, "UTF-8"));
+                    writer.write(result.toString());
+
+                    writer.flush();
+                    writer.close();
+                    os.close();
+
+                    BufferedReader is = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    return is.readLine();
+
+                    //return conn.getResponseMessage();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return response;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                validateResult(s);
+            }
+        }.execute(null, null, null);
     }
 
     public void getImages(View view) {
@@ -125,7 +209,9 @@ public class CloudSavingActivity extends AppCompatActivity {
         result.append(URLEncoder.encode("tipo_poste", "UTF-8")).append("=");
         result.append(URLEncoder.encode(luminaria.getTipoPoste(), "UTF-8")).append("&");
         result.append(URLEncoder.encode("imagen", "UTF-8")).append("=");
-        result.append(URLEncoder.encode(luminaria.getImagen(), "UTF-8"));
+        result.append(URLEncoder.encode(luminaria.getImagen(), "UTF-8")).append("&");
+        result.append(URLEncoder.encode("user", "UTF-8")).append("=");
+        result.append(URLEncoder.encode(user, "UTF-8"));
         return result.toString();
     }
 

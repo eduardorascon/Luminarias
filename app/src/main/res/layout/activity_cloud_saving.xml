@@ -36,6 +36,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/buttonLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="INGRESAR"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="@color/colorPrimary" />
     </LinearLayout>
 
     <android.support.v7.widget.AppCompatButton
@@ -43,6 +51,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:enabled="false"
         android:text="SUBIR INFORMACIÓN"
         android:textColor="#FFFFFF"
         app:backgroundTint="@color/colorPrimary" />
