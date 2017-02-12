@@ -23,10 +23,12 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -311,10 +313,10 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void loadTipoLamparaSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.tipo_lampara_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        tipoLamparaSpinner.setAdapter(adapter);
+        //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.tipo_lampara_array, android.R.layout.simple_spinner_item);
+        //adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        //tipoLamparaSpinner.setAdapter(adapter);
+        tipoLamparaSpinner.setAdapter(new WrapAdapter(this, getResources().getStringArray(R.array.tipo_lampara_array)));
         tipoLamparaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -329,10 +331,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadTipoPosteSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.tipo_poste_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        tipoPosteSpinner.setAdapter(adapter);
+        //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.tipo_poste_array, android.R.layout.simple_spinner_item);
+        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //tipoPosteSpinner.setAdapter(adapter);
+        tipoPosteSpinner.setAdapter(new WrapAdapter(this, getResources().getStringArray(R.array.tipo_poste_array)));
         tipoPosteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -677,5 +679,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         textViewWattValue.setText(watts);
+    }
+
+    class WrapAdapter extends ArrayAdapter<String> {
+        private Context mContext;
+        private String[] mItems;
+
+        public WrapAdapter(Context context, String[] items) {
+            super(context, 0, items);
+            mContext = context;
+            mItems = items;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView textView = (TextView) LayoutInflater.from(mContext)
+                    .inflate(R.layout.spinner_item, parent, false);
+            textView.setText(mItems[position]);
+            return textView;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            final TextView textView = (TextView) LayoutInflater.from(mContext)
+                    .inflate(R.layout.spinner_item, parent, false);
+            textView.setText(mItems[position]);
+            textView.post(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setSingleLine(false);
+                }
+            });
+            return textView;
+        }
     }
 }
