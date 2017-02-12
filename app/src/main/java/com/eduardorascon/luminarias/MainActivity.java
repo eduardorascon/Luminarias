@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launchCamera(View view) {
-        if (askForCameraPermission() == false)
+        if (askForCameraPermission() == false || askForStoragePermission() == false)
             return;
 
         launchCameraIntent();
@@ -167,11 +167,12 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        // Continue only if the File was successfully created
         if (photoFile != null) {
+            Uri photoURI = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", photoFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(intent, 1);
         }
     }
@@ -182,11 +183,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && requestCode == 1) {
 
+            //galleryAddPic();
+
             try {
                 ExifInterface exif = new ExifInterface(currentPhotoPath);
-                int orientation = exif.getAttributeInt(
-                        ExifInterface.TAG_ORIENTATION,
-                        ExifInterface.ORIENTATION_NORMAL);
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
                 int angle = 0;
 
@@ -218,13 +219,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
-        File path = new File(getFilesDir(), "Pictures/");
-        if (!path.exists()) path.mkdirs();
-        String imageFileName = "L_" + System.currentTimeMillis() + ".jpg";
-        File image = new File(path, imageFileName);
-        photoUri = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", image);
-        currentPhotoPath = image.getPath();
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(currentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 
     private boolean isLocationEnabled() {
@@ -343,6 +354,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return isCameraPermissionGranted;
+    }
+
+    private boolean askForStoragePermission() {
+        boolean isStoragePermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        if (isStoragePermissionGranted == false) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+        }
+        return isStoragePermissionGranted;
     }
 
     private boolean askForLocationPermission() {
