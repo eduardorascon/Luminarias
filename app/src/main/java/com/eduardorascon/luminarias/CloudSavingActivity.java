@@ -3,8 +3,10 @@ package com.eduardorascon.luminarias;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
@@ -29,6 +31,14 @@ public class CloudSavingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cloud_saving);
+
+        Button button = (AppCompatButton) findViewById(R.id.buttonSave);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getImages(view);
+            }
+        });
     }
 
     public void getImages(View view) {
@@ -48,8 +58,8 @@ public class CloudSavingActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
-                String responseFile = "";
-                if (luminaria.getRespaldoImagen() == 0)
+                String responseFile = sendDataToServer(luminaria);
+               /* if (luminaria.getRespaldoImagen() == 0)
                     responseFile = sendFileToServer(luminaria.getImagen());
 
                 if (luminaria.getRespaldoImagen() > 0 || responseFile.equals("200")) {
@@ -61,9 +71,9 @@ public class CloudSavingActivity extends AppCompatActivity {
                     String responseData = sendDataToServer(luminaria);
                     if (responseData.equals("200"))
                         db.updateLuminariaRespaldoDatos(luminaria);
-                }
+                }*/
 
-                return "";
+                return responseFile;
             }
         }.execute(null, null, null);
     }

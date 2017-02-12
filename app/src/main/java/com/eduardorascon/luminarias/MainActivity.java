@@ -14,19 +14,23 @@ import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.os.EnvironmentCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -76,6 +80,13 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHandler db = DatabaseHandler.getInstance(this);
         db.getWritableDatabase();
 
+        Button button = (AppCompatButton) findViewById(R.id.buttonSaveInfo);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                guardarLuminaria(view);
+            }
+        });
         imageView = (ImageView) findViewById(R.id.imageView);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         tipoPosteSpinner = (Spinner) findViewById(R.id.spinnerTipoPoste);

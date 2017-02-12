@@ -116,14 +116,13 @@
             android:onClick="launchCamera"
             android:text="FOTOGRAFÍA" />
 
-        <Button
-            android:id="@+id/button3"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/buttonSaveInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:backgroundTint="@color/colorPrimary"
-            android:onClick="guardarLuminaria"
             android:text="GUARDAR"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"
+            app:backgroundTint="@color/colorPrimary" />
     </LinearLayout>
 </RelativeLayout>
