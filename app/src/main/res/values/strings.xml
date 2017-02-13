@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">Registro de Luminarias</string>
-    <string name="create_table_luminarias">create table luminarias(_id integer primary key, lat text, lon text, tipo_poste text, altura text, tipo_lampara text, fecha_hora datetime default current_timestamp, nombre_imagen text)</string>
+    <string name="app_name">Luminarias</string>
+    <string name="create_table_luminarias">create table luminarias(_id integer primary key, lat text, lon text, tipo_poste text, tipo_lampara text, fecha_hora datetime default current_timestamp, nombre_imagen text, respaldo_imagen integer default 0, respaldo_datos integer default 0)</string>
+    <string name="select_data">SELECT _id, lat, lon, tipo_poste, tipo_lampara, nombre_imagen, datetime(fecha_hora, \'localtime\') fecha_hora, respaldo_imagen FROM luminarias where respaldo_datos = 0</string>
 </resources>
