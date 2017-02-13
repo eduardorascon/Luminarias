@@ -13,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -20,6 +21,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.os.EnvironmentCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
@@ -170,13 +172,44 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         // Continue only if the File was successfully created
-        if (photoFile != null) {
-            Uri photoURI = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", photoFile);
+        if (photoFile == null)
+            return;
+        try {
+            Uri photoURI;
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+                photoURI = Uri.fromFile(photoFile);
+            } else {
+                photoURI = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", photoFile);
+            }
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             startActivityForResult(intent, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    private String getTempDirectoryPath() {
+        File cache;
+
+        // SD Card Mounted
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            cache = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    .getAbsolutePath() +
+                    "/Android/data/" + getApplicationContext().getPackageName() + "/cache/");
+        }
+        // Use internal storage
+        else {
+            cache = getApplicationContext().getCacheDir();
+        }
+
+        // Create the cache directory if it doesn't exist
+        if (!cache.exists()) {
+            cache.mkdirs();
+        }
+
+        return cache.getAbsolutePath();
     }
 
     @Override
@@ -222,9 +255,9 @@ public class MainActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String imageFileName = "L_" + System.currentTimeMillis();
+        //File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File storageDir = new File(getTempDirectoryPath());
         storageDir.mkdirs();
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 

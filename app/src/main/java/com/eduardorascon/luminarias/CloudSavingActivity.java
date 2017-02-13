@@ -148,8 +148,8 @@ public class CloudSavingActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
-                String responseFile = sendDataToServer(luminaria);
-               /* if (luminaria.getRespaldoImagen() == 0)
+                String responseFile = "";// sendDataToServer(luminaria);
+                if (luminaria.getRespaldoImagen() == 0)
                     responseFile = sendFileToServer(luminaria.getImagen());
 
                 if (luminaria.getRespaldoImagen() > 0 || responseFile.equals("200")) {
@@ -161,7 +161,7 @@ public class CloudSavingActivity extends AppCompatActivity {
                     String responseData = sendDataToServer(luminaria);
                     if (responseData.equals("200"))
                         db.updateLuminariaRespaldoDatos(luminaria);
-                }*/
+                }
 
                 return responseFile;
             }
