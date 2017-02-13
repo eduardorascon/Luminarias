@@ -1,9 +1,2 @@
---principal
-http://programmerguru.com/android-tutorial/how-to-upload-image-to-php-server/
-
---csv
-http://stackoverflow.com/questions/16096785/php-script-to-take-form-data-from-android-app
-
-
---dialog
-http://stackoverflow.com/questions/23921356/android-upload-image-to-php-server
+--chooser
+http://stackoverflow.com/questions/27874038/how-to-make-intent-chooser-for-camera-or-gallery-application-in-android-like-wha
