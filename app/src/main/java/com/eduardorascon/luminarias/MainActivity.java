@@ -157,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
         if (askForCameraPermission() == false || askForStoragePermission() == false)
             return;
 
-        launchCameraIntent();
+        selectImageSource();
+        //launchCameraIntent();
     }
 
     private void launchCameraIntent() {
@@ -708,6 +709,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         textViewTipoLampara.setText("LAMPARA (" + watts + ")");
+    }
+
+    private void selectImageSource(){
+        final CharSequence[] items = {"CÁMARA", "GALERIA", "CANCELAR"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainAcitivity.this);
+        builder.setTitle("Agregar fotografia");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void OnClick(DialogInterface dialog, int item) {
+                if(items[item].equals("CÁMARA")) {
+                    launchCameraIntent();
+                } else if (items[item].equals("GALERIA")) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                } else if (items[item].equals("CANCELAR")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
     }
 
     class WrapAdapter extends ArrayAdapter<String> {
