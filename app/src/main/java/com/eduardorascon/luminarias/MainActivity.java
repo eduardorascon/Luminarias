@@ -217,40 +217,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if (resultCode == RESULT_OK && requestCode == 1) {
+        if(resultCode != RESULT_OK)
+            return;
 
-            galleryAddPic();
+        if (requestCode != 1)
+            return;
 
-            try {
-                ExifInterface exif = new ExifInterface(currentPhotoPath);
-                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        galleryAddPic();
 
-                int angle = 0;
+        try {
+            ExifInterface exif = new ExifInterface(currentPhotoPath);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
-                if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                    angle = 90;
-                } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                    angle = 180;
-                } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                    angle = 270;
-                }
+            int angle = 0;
 
-                Matrix mat = new Matrix();
-                mat.postRotate(angle);
-
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 2;
-                FileInputStream fileInputStream = new FileInputStream(new File(currentPhotoPath));
-                Bitmap bmp = BitmapFactory.decodeStream(fileInputStream, null, options);
-                Bitmap bitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, new ByteArrayOutputStream());
-                imageView.setImageBitmap(bitmap);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                angle = 90;
+            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                angle = 180;
+            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                angle = 270;
             }
+
+            Matrix mat = new Matrix();
+            mat.postRotate(angle);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 2;
+            FileInputStream fileInputStream = new FileInputStream(new File(currentPhotoPath));
+            Bitmap bmp = BitmapFactory.decodeStream(fileInputStream, null, options);
+            Bitmap bitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, new ByteArrayOutputStream());
+            imageView.setImageBitmap(bitmap);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -723,6 +726,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (items[item].equals("GALERIA")) {
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(intent, "Selecciona imagen"), 2);
                 } else if (items[item].equals("CANCELAR")) {
                     dialog.dismiss();
                 }
