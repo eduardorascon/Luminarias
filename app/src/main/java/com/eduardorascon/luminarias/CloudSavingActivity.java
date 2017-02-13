@@ -38,6 +38,12 @@ public class CloudSavingActivity extends AppCompatActivity {
     LinearLayout llLogin;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        checkMobileInternetConn();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cloud_saving);
@@ -309,5 +315,27 @@ public class CloudSavingActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
         return response;
+    }
+
+    private boolean isWifiEnabled() {
+        //Create object for ConnectivityManager class which returns network related info
+        ConnectivityManager connectivity = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity == null) {
+            return false;
+        }
+        //Get network info - WIFI internet access
+        NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (info == null) {
+            return false;
+        }
+        //Look for whether device is currently connected to WIFI network
+        return info.isConnected();
+    }
+
+    private void checkMobileInternetConn() {
+        if(isWifiEnabled() == false){
+            Toast.makeText(this, "CONEXION WIFI NO DISPONIBLE...", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 }
