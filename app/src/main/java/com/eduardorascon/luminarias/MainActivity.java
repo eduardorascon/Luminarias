@@ -89,15 +89,30 @@ public class MainActivity extends AppCompatActivity {
         if (validateInput() == false)
             return;
 
-        Luminaria luminaria = new Luminaria();
-        luminaria.setLat(String.valueOf(latitudeGPS));
-        luminaria.setLon(String.valueOf(longitudeGPS));
-        luminaria.setTipoPoste(tipoPosteSpinner.getSelectedItem().toString());
-        luminaria.setTipoLampara(tipoLamparaSpinner.getSelectedItem().toString());
-        luminaria.setImagen(currentPhotoPath);
+        try{
+            Luminaria luminaria = new Luminaria();
+            luminaria.setLat(String.valueOf(latitudeGPS));
+            luminaria.setLon(String.valueOf(longitudeGPS));
+            luminaria.setTipoPoste(tipoPosteSpinner.getSelectedItem().toString());
+            luminaria.setTipoLampara(tipoLamparaSpinner.getSelectedItem().toString());
+            luminaria.setImagen(currentPhotoPath);
 
-        DatabaseHandler db = DatabaseHandler.getInstance(view.getContext());
-        long registro = db.insertLuminaria(luminaria);
+            DatabaseHandler db = DatabaseHandler.getInstance(view.getContext());
+            long registro = db.insertLuminaria(luminaria);
+
+            if(registro > 0) {
+                Imagen imagen = new Imagen();
+                imagen.setLuminaria(registro);
+                imagen.setNombre("L_" + System.currentTimeMillis() + ".jpg");
+                imagen.setBlob(getImageBlob());
+
+                long imagen = db.insertImagen(imagen);
+            }
+        }
+        catch(Excepciont e){
+            e.printStackTrace();
+            return;
+        }
 
         resetInput();
         Toast.makeText(this, "Luminaria (" + registro + ") guardada con éxito", Toast.LENGTH_LONG).show();

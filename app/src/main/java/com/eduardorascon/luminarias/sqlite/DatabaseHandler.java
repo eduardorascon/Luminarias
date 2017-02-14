@@ -40,6 +40,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return db.insert("luminarias", null, contentValues);
     }
 
+    public long insertImagen(Imagen imagen){
+    	sqLiteDatabase db = this.getWritableDatabase();
+    	ContentValues contentValues = new ContentValues();
+    	contentValues.put("luminaria", imagen.luminaria);
+    	contentValues.put("nombre_imagen", imagen.nombreImagen);
+    	contentValues.put("imagen", imagen.imagen);
+    	return db.insert("imagenes", null, contentValues)
+
+    }
+
     public long updateLuminariaRespaldoDatos(Luminaria luminaria) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -84,6 +94,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LUMINARIAS_TABLE = context.getString(R.string.create_table_luminarias);
         db.execSQL(CREATE_LUMINARIAS_TABLE);
+
+        String CREATE_PICTURES_TABLE = context.getString(R.string.create_table_pictures);
+        db.execSQL(CREATE_PICTURES_TABLE);
     }
 
     @Override
