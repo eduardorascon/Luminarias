@@ -66,7 +66,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public List<Luminaria> getAllLuminarias() {
         List<Luminaria> luminariasList = new ArrayList<>();
-        String selectAll = context.getString(R.string.select_data);
+        String selectAll = context.getString(R.string.select_luminarias_data);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectAll, null);
@@ -85,6 +85,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             l.setFechaHora(cursor.getString(6));//fecha_hora
             l.setRespaldoImagen(cursor.getInt(7));//respaldo_imagen
             luminariasList.add(l);
+        } while (cursor.moveToNext());
+
+        return luminariasList;
+    }
+
+    public List<Imagen> getAllImagenesFromLuminaria(Luminaria luminaria) {
+        List<Imagen> imagenesList = new ArrayList<>();
+        String selectAll = context.getString(R.string.select_imagenes_data);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectAll, null);
+
+        if (cursor.moveToFirst() == false)
+            return luminariasList;
+
+        do {
+            Imagen i = new Imagen();
+            i.setId(cursor.getInt(0));//id
+            i.setLat(cursor.getString(1));//nombre_imagen
+            i.setLon(cursor.getByteArray(2));//imagen
+            imagenesList.add(i);
         } while (cursor.moveToNext());
 
         return luminariasList;

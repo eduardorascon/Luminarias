@@ -156,9 +156,15 @@ public class CloudSavingActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
+
+                DatabaseHandler db = DatabaseHandler.getInstance(this);
+
                 String responseFile = "";// sendDataToServer(luminaria);
-                if (luminaria.getRespaldoImagen() == 0)
-                    responseFile = sendFileToServer(luminaria.getImagen());
+                if (luminaria.getRespaldoImagen() == 0){
+                    List<Imagen> imagenesList = db.getAllImagenesFromLuminaria(luminaria)
+                    for(Imagen imagen : imagenesList)
+                        responseFile = sendFileToServer(luminaria.getImagen());
+                }
 
                 if (luminaria.getRespaldoImagen() > 0 || responseFile.equals("200")) {
                     DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
@@ -234,7 +240,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         return result.toString();
     }
 
-    private String sendFileToServer(String filename) {
+    private String sendFileToServer(byte[] file, String filename) {
         String response = "error";
         Log.e("Image filename", filename);
         HttpURLConnection connection = null;
@@ -249,7 +255,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         byte[] buffer;
         int maxBufferSize = 1 * 1024;
         try {
-            FileInputStream fileInputStream = new FileInputStream(new File(pathToOurFile));
+            InputStream inputStream = new ByteArrayInputStream(file);
             URL url = new URL("http://luminarias.todoslosbits.com.mx/upload_image.php");
             connection = (HttpURLConnection) url.openConnection();
 
@@ -273,12 +279,12 @@ public class CloudSavingActivity extends AppCompatActivity {
             outputStream.writeBytes(connstr);
             outputStream.writeBytes(lineEnd);
 
-            bytesAvailable = fileInputStream.available();
+            bytesAvailable = inputStream.available();
             bufferSize = Math.min(bytesAvailable, maxBufferSize);
             buffer = new byte[bufferSize];
 
             // Read file
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            bytesRead = inputStream.read(buffer, 0, bufferSize);
             Log.e("Image length", bytesAvailable + "");
             try {
                 while (bytesRead > 0) {
@@ -289,9 +295,9 @@ public class CloudSavingActivity extends AppCompatActivity {
                         response = "outofmemoryerror";
                         return response;
                     }
-                    bytesAvailable = fileInputStream.available();
+                    bytesAvailable = inputStream.available();
                     bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                    bytesRead = inputStream.read(buffer, 0, bufferSize);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -306,7 +312,7 @@ public class CloudSavingActivity extends AppCompatActivity {
             if (serverResponseCode == HttpURLConnection.HTTP_OK)
                 response = String.valueOf(serverResponseCode);
 
-            fileInputStream.close();
+            inputStream.close();
             outputStream.flush();
             outputStream.close();
             outputStream = null;
