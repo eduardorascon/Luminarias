@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if(resultCode != RESULT_OK)
+        if (resultCode != RESULT_OK)
             return;
 
         if (requestCode != 1)
@@ -714,24 +714,24 @@ public class MainActivity extends AppCompatActivity {
         textViewTipoLampara.setText("LAMPARA (" + watts + ")");
     }
 
-    private void selectImageSource(){
+    private void selectImageSource() {
         final CharSequence[] items = {"CÁMARA", "GALERIA", "CANCELAR"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainAcitivity.this);
-        builder.setTitle("Agregar fotografia");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void OnClick(DialogInterface dialog, int item) {
-                if(items[item].equals("CÁMARA")) {
-                    launchCameraIntent();
-                } else if (items[item].equals("GALERIA")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, "Selecciona imagen"), 2);
-                } else if (items[item].equals("CANCELAR")) {
-                    dialog.dismiss();
-                }
-            }
-        });
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Agregar fotografia")
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (items[i].equals("CÁMARA")) {
+                            launchCameraIntent();
+                        } else if (items[i].equals("GALERIA")) {
+                            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            intent.setType("image/*");
+                            startActivityForResult(Intent.createChooser(intent, "Selecciona imagen"), 2);
+                        } else if (items[i].equals("CANCELAR")) {
+                            dialogInterface.dismiss();
+                        }
+                    }
+                });
         builder.show();
     }
 
