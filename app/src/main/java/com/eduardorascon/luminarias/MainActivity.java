@@ -118,6 +118,14 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Luminaria (" + registro + ") guardada con éxito", Toast.LENGTH_LONG).show();
     }
 
+    private byte[] getImageBlob(){
+        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        bitmap.compress(CompressFormat.JPEG, 100, os);
+        byte[] imageData = os.toByteArray();
+    }
+
     private void resetInput() {
         tipoPosteSpinner.setSelection(0);
         tipoLamparaSpinner.setSelection(0);
