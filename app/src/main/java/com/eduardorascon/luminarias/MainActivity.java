@@ -6,21 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
@@ -40,12 +33,6 @@ import android.widget.Toast;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     String currentPhotoPath;
@@ -156,60 +143,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent chooseImageIntent = ImagePicker.getPickImageIntent(this);
         startActivityForResult(chooseImageIntent, 1);
-        //selectImageSource();
-        //launchCameraIntent();
-    }
-
-    private void launchCameraIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager()) == null)
-            return;
-
-        File photoFile = null;
-        try {
-            photoFile = createImageFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Continue only if the File was successfully created
-        if (photoFile == null)
-            return;
-        try {
-            Uri photoURI;
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-                photoURI = Uri.fromFile(photoFile);
-            } else {
-                photoURI = FileProvider.getUriForFile(this, "com.eduardorascon.luminarias.fileprovider", photoFile);
-            }
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            startActivityForResult(intent, 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String getTempDirectoryPath() {
-        File cache;
-
-        // SD Card Mounted
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            cache = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                    .getAbsolutePath() +
-                    "/Android/data/" + getApplicationContext().getPackageName() + "/cache/");
-        }
-        // Use internal storage
-        else {
-            cache = getApplicationContext().getCacheDir();
-        }
-
-        // Create the cache directory if it doesn't exist
-        if (!cache.exists()) {
-            cache.mkdirs();
-        }
-
-        return cache.getAbsolutePath();
     }
 
     @Override
@@ -222,64 +155,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode != 1)
             return;
 
-        //galleryAddPic();
-
         Bitmap bitmap = ImagePicker.getImageFromResult(this, resultCode, intent);
         imageView.setImageBitmap(bitmap);
         return;
-        // TODO use bitmap
-
-        /*try {
-            ExifInterface exif = new ExifInterface(currentPhotoPath);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-            int angle = 0;
-
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                angle = 90;
-            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                angle = 180;
-            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                angle = 270;
-            }
-
-            Matrix mat = new Matrix();
-            mat.postRotate(angle);
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 2;
-            FileInputStream fileInputStream = new FileInputStream(new File(currentPhotoPath));
-            Bitmap bmp = BitmapFactory.decodeStream(fileInputStream, null, options);
-            Bitmap bitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, new ByteArrayOutputStream());
-            imageView.setImageBitmap(bitmap);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String imageFileName = "L_" + System.currentTimeMillis();
-        //File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File storageDir = new File(getTempDirectoryPath());
-        storageDir.mkdirs();
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(currentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
     }
 
     private boolean isLocationEnabled() {
@@ -329,12 +207,6 @@ public class MainActivity extends AppCompatActivity {
         public void onLocationChanged(Location location) {
             longitudeGPS = location.getLongitude();
             latitudeGPS = location.getLatitude();
-           /* runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    textViewLocation.setText("lat:" + latitudeGPS + ", lon:" + longitudeGPS);
-                }
-            });*/
         }
 
         @Override
@@ -428,14 +300,11 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Toast.makeText(MainActivity.this, "Es necesario contar con el permiso solicitado", Toast.LENGTH_LONG).show();
                 }
-
-                //launchCameraIntent();
                 break;
             case 2://ACCESS_FINE_LOCATION
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Toast.makeText(MainActivity.this, "Es necesario contar con el permiso solicitado", Toast.LENGTH_LONG).show();
                 }
-
                 toggleGPSUpdates();
                 break;
             default:
@@ -716,27 +585,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         textViewTipoLampara.setText("LAMPARA (" + watts + ")");
-    }
-
-    private void selectImageSource() {
-        final CharSequence[] items = {"CÁMARA", "GALERIA", "CANCELAR"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Agregar fotografia")
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (items[i].equals("CÁMARA")) {
-                            //launchCameraIntent();
-                        } else if (items[i].equals("GALERIA")) {
-                            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            intent.setType("image/*");
-                            startActivityForResult(Intent.createChooser(intent, "Selecciona imagen"), 2);
-                        } else if (items[i].equals("CANCELAR")) {
-                            dialogInterface.dismiss();
-                        }
-                    }
-                });
-        builder.show();
     }
 
     class WrapAdapter extends ArrayAdapter<String> {
