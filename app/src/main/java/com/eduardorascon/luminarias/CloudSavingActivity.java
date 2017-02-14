@@ -1,5 +1,7 @@
 package com.eduardorascon.luminarias;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -319,13 +321,17 @@ public class CloudSavingActivity extends AppCompatActivity {
 
     private boolean isWifiEnabled() {
         //Create object for ConnectivityManager class which returns network related info
-        ConnectivityManager connectivity = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         if (connectivity == null) {
             return false;
         }
         //Get network info - WIFI internet access
-        NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo info = connectivity.getActiveNetworkInfo();
         if (info == null) {
+            return false;
+        }
+        //Check if network is WIFI
+        if (info.getType() != ConnectivityManager.TYPE_WIFI) {
             return false;
         }
         //Look for whether device is currently connected to WIFI network
@@ -333,7 +339,7 @@ public class CloudSavingActivity extends AppCompatActivity {
     }
 
     private void checkMobileInternetConn() {
-        if(isWifiEnabled() == false){
+        if (isWifiEnabled() == false) {
             Toast.makeText(this, "CONEXION WIFI NO DISPONIBLE...", Toast.LENGTH_LONG).show();
             finish();
         }
