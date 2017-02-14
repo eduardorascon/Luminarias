@@ -154,7 +154,9 @@ public class MainActivity extends AppCompatActivity {
         if (askForCameraPermission() == false || askForStoragePermission() == false)
             return;
 
-        selectImageSource();
+        Intent chooseImageIntent = ImagePicker.getPickImageIntent(this);
+        startActivityForResult(chooseImageIntent, 1);
+        //selectImageSource();
         //launchCameraIntent();
     }
 
@@ -220,9 +222,14 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode != 1)
             return;
 
-        galleryAddPic();
+        //galleryAddPic();
 
-        try {
+        Bitmap bitmap = ImagePicker.getImageFromResult(this, resultCode, intent);
+        imageView.setImageBitmap(bitmap);
+        return;
+        // TODO use bitmap
+
+        /*try {
             ExifInterface exif = new ExifInterface(currentPhotoPath);
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
@@ -251,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private File createImageFile() throws IOException {
@@ -422,7 +429,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Es necesario contar con el permiso solicitado", Toast.LENGTH_LONG).show();
                 }
 
-                launchCameraIntent();
+                //launchCameraIntent();
                 break;
             case 2://ACCESS_FINE_LOCATION
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
@@ -719,7 +726,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (items[i].equals("CÁMARA")) {
-                            launchCameraIntent();
+                            //launchCameraIntent();
                         } else if (items[i].equals("GALERIA")) {
                             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             intent.setType("image/*");
