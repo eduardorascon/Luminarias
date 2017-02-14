@@ -95,7 +95,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_LUMINARIAS_TABLE = context.getString(R.string.create_table_luminarias);
         db.execSQL(CREATE_LUMINARIAS_TABLE);
 
-        String CREATE_PICTURES_TABLE = context.getString(R.string.create_table_pictures);
+        String CREATE_IMAGENES_TABLE = context.getString(R.string.create_table_imagenes);
         db.execSQL(CREATE_PICTURES_TABLE);
     }
 
