@@ -1,2 +1,6 @@
 --chooser
 http://stackoverflow.com/questions/27874038/how-to-make-intent-chooser-for-camera-or-gallery-application-in-android-like-wha
+
+--better chooser
+https://github.com/Mariovc/ImagePicker/blob/develop/library/src/main/java/com/mvc/imagepicker/ImagePicker.java
+https://gist.github.com/Mariovc/f06e70ebe8ca52fbbbe2
