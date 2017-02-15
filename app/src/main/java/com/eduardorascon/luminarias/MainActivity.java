@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
             luminaria.setLon(String.valueOf(longitudeGPS));
             luminaria.setTipoPoste(tipoPosteSpinner.getSelectedItem().toString());
             luminaria.setTipoLampara(tipoLamparaSpinner.getSelectedItem().toString());
-            luminaria.setImagen(currentPhotoPath);
 
             DatabaseHandler db = DatabaseHandler.getInstance(view.getContext());
             long registro = db.insertLuminaria(luminaria);

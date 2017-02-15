@@ -36,7 +36,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         contentValues.put("lon", luminaria.getLon());
         contentValues.put("tipo_poste", luminaria.getTipoPoste());
         contentValues.put("tipo_lampara", luminaria.getTipoLampara());
-        contentValues.put("nombre_imagen", luminaria.getImagen());
         return db.insert("luminarias", null, contentValues);
     }
 
@@ -81,10 +80,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             l.setLon(cursor.getString(2));//lon
             l.setTipoPoste(cursor.getString(3));//tipo_poste
             l.setTipoLampara(cursor.getString(4));//tipo_lampara
-            l.setImagen(cursor.getString(5));//nombre_imagen
-            l.setFechaHora(cursor.getString(6));//fecha_hora
-            l.setRespaldoImagen(cursor.getInt(7));//respaldo_imagen
-            l.setRespladoDatos(cursor.getInt(8));//resplado_datos
+            l.setFechaHora(cursor.getString(5));//fecha_hora
+            l.setRespaldoImagen(cursor.getInt(6));//respaldo_imagen
+            l.setRespladoDatos(cursor.getInt(7));//resplado_datos
             luminariasList.add(l);
         } while (cursor.moveToNext());
 
