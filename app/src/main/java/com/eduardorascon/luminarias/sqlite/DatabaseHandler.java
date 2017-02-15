@@ -95,7 +95,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String selectAll = context.getString(R.string.select_imagenes_data);
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectAll, null);
+        Cursor cursor = db.rawQuery(selectAll, new String[]{String.valueOf(luminaria.getId())});
 
         if (cursor.moveToFirst() == false)
             return imagenesList;
