@@ -84,6 +84,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             l.setImagen(cursor.getString(5));//nombre_imagen
             l.setFechaHora(cursor.getString(6));//fecha_hora
             l.setRespaldoImagen(cursor.getInt(7));//respaldo_imagen
+            l.setRespladoDatos(cursor.getInt(8));//resplado_datos
             luminariasList.add(l);
         } while (cursor.moveToNext());
 
