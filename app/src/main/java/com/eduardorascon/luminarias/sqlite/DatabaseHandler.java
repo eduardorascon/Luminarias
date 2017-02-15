@@ -42,7 +42,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public long insertImagen(Imagen imagen) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("luminaria", imagen.getLuminaria());
+        contentValues.put("luminaria_id", imagen.getLuminaria());
         contentValues.put("nombre_imagen", imagen.getNombreImagen());
         contentValues.put("imagen", imagen.getImagen());
         return db.insert("imagenes", null, contentValues);
