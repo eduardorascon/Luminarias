@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             if (registro > 0) {
                 Imagen imagen = new Imagen();
                 imagen.setLuminaria((int) registro);
-                imagen.setNombreImagen("L_" + System.currentTimeMillis() + ".jpg");
+                imagen.setNombreImagen("L_" + registro + "_" + System.currentTimeMillis() + ".jpg");
                 imagen.setImagen(getImageBlob());
 
                 long registro_imagen = db.insertImagen(imagen);
