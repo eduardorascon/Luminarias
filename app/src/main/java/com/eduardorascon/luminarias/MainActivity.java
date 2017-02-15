@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -32,7 +33,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
+import com.eduardorascon.luminarias.sqlite.Imagen;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
+
+import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends AppCompatActivity {
     String currentPhotoPath;
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         if (validateInput() == false)
             return;
 
-        try{
+        try {
             Luminaria luminaria = new Luminaria();
             luminaria.setLat(String.valueOf(latitudeGPS));
             luminaria.setLon(String.valueOf(longitudeGPS));
@@ -100,30 +104,29 @@ public class MainActivity extends AppCompatActivity {
             DatabaseHandler db = DatabaseHandler.getInstance(view.getContext());
             long registro = db.insertLuminaria(luminaria);
 
-            if(registro > 0) {
+            if (registro > 0) {
                 Imagen imagen = new Imagen();
-                imagen.setLuminaria(registro);
-                imagen.setNombre("L_" + System.currentTimeMillis() + ".jpg");
-                imagen.setBlob(getImageBlob());
+                imagen.setLuminaria((int) registro);
+                imagen.setNombreImagen("L_" + System.currentTimeMillis() + ".jpg");
+                imagen.setImagen(getImageBlob());
 
-                long imagen = db.insertImagen(imagen);
+                long registro_imagen = db.insertImagen(imagen);
             }
-        }
-        catch(Excepciont e){
+
+            Toast.makeText(this, "Luminaria (" + registro + ") guardada con éxito", Toast.LENGTH_LONG).show();
+            resetInput();
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
-
-        resetInput();
-        Toast.makeText(this, "Luminaria (" + registro + ") guardada con éxito", Toast.LENGTH_LONG).show();
     }
 
-    private byte[] getImageBlob(){
+    private byte[] getImageBlob() {
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        bitmap.compress(CompressFormat.JPEG, 100, os);
-        byte[] imageData = os.toByteArray();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+        return os.toByteArray();
     }
 
     private void resetInput() {

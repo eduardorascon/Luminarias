@@ -2,7 +2,7 @@ package com.eduardorascon.luminarias.sqlite;
 
 public class Imagen {
     private int id, luminaria;
-    private Byte[] imagen;
+    private byte[] imagen;
     private String nombreImagen;
 
     public void setLuminaria(int luminaria) {
@@ -13,11 +13,11 @@ public class Imagen {
         return luminaria;
     }
 
-    public String getImagen() {
+    public byte[] getImagen() {
         return imagen;
     }
 
-    public void setImagen(String imagen) {
+    public void setImagen(byte[] imagen) {
         this.imagen = imagen;
     }
 

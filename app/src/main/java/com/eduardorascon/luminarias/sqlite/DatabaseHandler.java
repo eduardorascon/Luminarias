@@ -40,13 +40,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return db.insert("luminarias", null, contentValues);
     }
 
-    public long insertImagen(Imagen imagen){
-    	sqLiteDatabase db = this.getWritableDatabase();
-    	ContentValues contentValues = new ContentValues();
-    	contentValues.put("luminaria", imagen.luminaria);
-    	contentValues.put("nombre_imagen", imagen.nombreImagen);
-    	contentValues.put("imagen", imagen.imagen);
-    	return db.insert("imagenes", null, contentValues)
+    public long insertImagen(Imagen imagen) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("luminaria", imagen.getLuminaria());
+        contentValues.put("nombre_imagen", imagen.getNombreImagen());
+        contentValues.put("imagen", imagen.getImagen());
+        return db.insert("imagenes", null, contentValues);
 
     }
 
@@ -98,17 +98,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectAll, null);
 
         if (cursor.moveToFirst() == false)
-            return luminariasList;
+            return imagenesList;
 
         do {
             Imagen i = new Imagen();
             i.setId(cursor.getInt(0));//id
-            i.setLat(cursor.getString(1));//nombre_imagen
-            i.setLon(cursor.getByteArray(2));//imagen
+            i.setNombreImagen(cursor.getString(1));//nombre_imagen
+            i.setImagen(cursor.getBlob(2));//imagen
             imagenesList.add(i);
         } while (cursor.moveToNext());
 
-        return luminariasList;
+        return imagenesList;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_LUMINARIAS_TABLE);
 
         String CREATE_IMAGENES_TABLE = context.getString(R.string.create_table_imagenes);
-        db.execSQL(CREATE_PICTURES_TABLE);
+        db.execSQL(CREATE_IMAGENES_TABLE);
     }
 
     @Override

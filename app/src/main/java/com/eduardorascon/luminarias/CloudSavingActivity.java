@@ -14,13 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
+import com.eduardorascon.luminarias.sqlite.Imagen;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -157,17 +160,16 @@ public class CloudSavingActivity extends AppCompatActivity {
             @Override
             protected String doInBackground(Void... voids) {
 
-                DatabaseHandler db = DatabaseHandler.getInstance(this);
+                DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
 
                 String responseFile = "";// sendDataToServer(luminaria);
-                if (luminaria.getRespaldoImagen() == 0){
-                    List<Imagen> imagenesList = db.getAllImagenesFromLuminaria(luminaria)
-                    for(Imagen imagen : imagenesList)
-                        responseFile = sendFileToServer(luminaria.getImagen());
+                if (luminaria.getRespaldoImagen() == 0) {
+                    List<Imagen> imagenesList = db.getAllImagenesFromLuminaria(luminaria);
+                    for (Imagen imagen : imagenesList)
+                        responseFile = sendFileToServer(imagen.getImagen(), imagen.getNombreImagen());
                 }
 
                 if (luminaria.getRespaldoImagen() > 0 || responseFile.equals("200")) {
-                    DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
 
                     if (luminaria.getRespaldoImagen() == 0)
                         db.updateLuminariaRespladoImagen(luminaria);
