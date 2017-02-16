@@ -19,7 +19,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                 startActivity(intent);
 
-                // close this activity
                 finish();
             }
         }, SPLASH_SCREEN_TIME);
