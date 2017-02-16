@@ -36,8 +36,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         contentValues.put("lon", luminaria.getLon());
         contentValues.put("tipo_poste", luminaria.getTipoPoste());
         contentValues.put("tipo_lampara", luminaria.getTipoLampara());
-        contentValues.put("nombre_imagen", luminaria.getImagen());
         return db.insert("luminarias", null, contentValues);
+    }
+
+    public long insertImagen(Imagen imagen) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("luminaria_id", imagen.getLuminaria());
+        contentValues.put("nombre_imagen", imagen.getNombreImagen());
+        contentValues.put("imagen", imagen.getImagen());
+        return db.insert("imagenes", null, contentValues);
+
     }
 
     public long updateLuminariaRespaldoDatos(Luminaria luminaria) {
@@ -56,7 +65,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public List<Luminaria> getAllLuminarias() {
         List<Luminaria> luminariasList = new ArrayList<>();
-        String selectAll = context.getString(R.string.select_data);
+        String selectAll = context.getString(R.string.select_luminarias_data);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectAll, null);
@@ -71,19 +80,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             l.setLon(cursor.getString(2));//lon
             l.setTipoPoste(cursor.getString(3));//tipo_poste
             l.setTipoLampara(cursor.getString(4));//tipo_lampara
-            l.setImagen(cursor.getString(5));//nombre_imagen
-            l.setFechaHora(cursor.getString(6));//fecha_hora
-            l.setRespaldoImagen(cursor.getInt(7));//respaldo_imagen
+            l.setFechaHora(cursor.getString(5));//fecha_hora
+            l.setRespaldoImagen(cursor.getInt(6));//respaldo_imagen
+            l.setRespladoDatos(cursor.getInt(7));//resplado_datos
             luminariasList.add(l);
         } while (cursor.moveToNext());
 
         return luminariasList;
     }
 
+    public List<Imagen> getAllImagenesFromLuminaria(Luminaria luminaria) {
+        List<Imagen> imagenesList = new ArrayList<>();
+        String selectAll = context.getString(R.string.select_imagenes_data);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectAll, new String[]{String.valueOf(luminaria.getId())});
+
+        if (cursor.moveToFirst() == false)
+            return imagenesList;
+
+        do {
+            Imagen i = new Imagen();
+            i.setId(cursor.getInt(0));//id
+            i.setNombreImagen(cursor.getString(1));//nombre_imagen
+            i.setImagen(cursor.getBlob(2));//imagen
+            imagenesList.add(i);
+        } while (cursor.moveToNext());
+
+        return imagenesList;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LUMINARIAS_TABLE = context.getString(R.string.create_table_luminarias);
         db.execSQL(CREATE_LUMINARIAS_TABLE);
+
+        String CREATE_IMAGENES_TABLE = context.getString(R.string.create_table_imagenes);
+        db.execSQL(CREATE_IMAGENES_TABLE);
     }
 
     @Override
