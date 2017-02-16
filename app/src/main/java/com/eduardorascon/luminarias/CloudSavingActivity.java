@@ -162,24 +162,21 @@ public class CloudSavingActivity extends AppCompatActivity {
 
                 DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
 
-                String responseFile = "";// sendDataToServer(luminaria);
+                List<Imagen> imagenesList=null;
                 if (luminaria.getRespaldoImagen() == 0) {
-                    List<Imagen> imagenesList = db.getAllImagenesFromLuminaria(luminaria);
-                    for (Imagen imagen : imagenesList)
-                        responseFile = sendFileToServer(imagen.getImagen(), imagen.getNombreImagen());
+                    imagenesList = db.getAllImagenesFromLuminaria(luminaria);
+                    for (Imagen imagen : imagenesList){
+                        String responseFile = sendFileToServer(imagen);
+                        if(responseFile.equals("200"))
+                            db.updateLuminariaRespladoImagen(luminaria);
+                    }
                 }
 
-                if (luminaria.getRespaldoImagen() > 0 || responseFile.equals("200")) {
+                String responseData = sendDataToServer(luminaria, imagenesList);
+                if (responseData.equals("200"))
+                    db.updateLuminariaRespaldoDatos(luminaria);
 
-                    if (luminaria.getRespaldoImagen() == 0)
-                        db.updateLuminariaRespladoImagen(luminaria);
-
-                    String responseData = sendDataToServer(luminaria);
-                    if (responseData.equals("200"))
-                        db.updateLuminariaRespaldoDatos(luminaria);
-                }
-
-                return responseFile;
+                return "";
             }
 
             @Override
@@ -189,7 +186,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         }.execute(null, null, null);
     }
 
-    private String sendDataToServer(Luminaria luminaria) {
+    private String sendDataToServer(Luminaria luminaria, List<Imagen> imagenesList) {
         URL url;
         String response = "";
         try {
@@ -204,6 +201,7 @@ public class CloudSavingActivity extends AppCompatActivity {
 
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            
             writer.write(getPostDataString(luminaria));
 
             writer.flush();
@@ -242,13 +240,12 @@ public class CloudSavingActivity extends AppCompatActivity {
         return result.toString();
     }
 
-    private String sendFileToServer(byte[] file, String filename) {
+    private String sendFileToServer(Imagen imagen) {
         String response = "error";
-        Log.e("Image filename", filename);
         HttpURLConnection connection = null;
         DataOutputStream outputStream = null;
 
-        String pathToOurFile = filename;
+        String pathToOurFile = imagen.getNombreImagen();
         String lineEnd = "\r\n";
         String twoHyphens = "--";
         String boundary = "*****";
@@ -257,7 +254,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         byte[] buffer;
         int maxBufferSize = 1 * 1024;
         try {
-            InputStream inputStream = new ByteArrayInputStream(file);
+            InputStream inputStream = new ByteArrayInputStream(imagen.getImagen());
             URL url = new URL("http://luminarias.todoslosbits.com.mx/upload_image.php");
             connection = (HttpURLConnection) url.openConnection();
 
