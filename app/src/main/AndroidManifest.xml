@@ -40,7 +40,8 @@
 
         <activity
             android:name=".CloudSavingActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".SplashScreenActivity"></activity>
     </application>
 
 </manifest>
