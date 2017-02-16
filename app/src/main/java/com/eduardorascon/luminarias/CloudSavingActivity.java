@@ -283,8 +283,6 @@ public class CloudSavingActivity extends AppCompatActivity {
 
             String extension_withname = pathToOurFile.substring(pathToOurFile.lastIndexOf("/") + 1);
             String connstr = "Content-Disposition: form-data; name=\"image\";filename=\"" + extension_withname + "\"" + lineEnd;
-            Log.i("Connstr", connstr);
-
             outputStream.writeBytes(connstr);
             outputStream.writeBytes(lineEnd);
 
@@ -315,6 +313,12 @@ public class CloudSavingActivity extends AppCompatActivity {
             }
             outputStream.writeBytes(lineEnd);
             outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+            outputStream.writeBytes("Content-Disposition: form-data; name=\"user\"" + lineEnd);
+            outputStream.writeBytes(lineEnd);
+            outputStream.writeBytes(user);
+            outputStream.writeBytes(lineEnd);
+            outputStream.writeBytes(twoHyphens + boundary + twoHyphens + user);
 
             // Responses from the server (code and message)
             int serverResponseCode = connection.getResponseCode();
