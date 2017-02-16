@@ -14,4 +14,8 @@
         <item name="android:dividerHeight">0.5dp</item>
     </style>
 
+    <style name="SplashScreenTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
 </resources>
