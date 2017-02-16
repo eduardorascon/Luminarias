@@ -1,2 +1,5 @@
 --chooser
 http://stackoverflow.com/questions/27874038/how-to-make-intent-chooser-for-camera-or-gallery-application-in-android-like-wha
+
+--post file with data
+http://stackoverflow.com/questions/26686806/httpurlconnection-to-send-image-audio-and-video-files-with-parameter-may-stri
