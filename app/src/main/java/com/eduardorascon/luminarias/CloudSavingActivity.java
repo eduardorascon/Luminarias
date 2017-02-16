@@ -275,24 +275,30 @@ public class CloudSavingActivity extends AppCompatActivity {
             connection.setChunkedStreamingMode(1024);
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Connection", "Keep-Alive");
-            connection.setRequestProperty("ENCTYPE", "multipart/form-data");
+            //connection.setRequestProperty("ENCTYPE", "multipart/form-data");
             connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
 
             outputStream = new DataOutputStream(connection.getOutputStream());
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
 
-            String extension_withname = pathToOurFile.substring(pathToOurFile.lastIndexOf("/") + 1);
-            String connstr = "Content-Disposition: form-data; name=\"image\";filename=\"" + extension_withname + "\"" + lineEnd;
-            outputStream.writeBytes(connstr);
+            outputStream.writeBytes("Content-Disposition: form-data; name=\"user\"" + lineEnd);
             outputStream.writeBytes(lineEnd);
+            outputStream.writeBytes(user);
+            outputStream.writeBytes(lineEnd);
+            outputStream.writeBytes(twoHyphens + boundary + twoHyphens);
+
+            outputStream.writeBytes("Content-Disposition: form-data; name=\"nombreImagen\"" + lineEnd);
+            outputStream.writeBytes(lineEnd);
+            outputStream.writeBytes(pathToOurFile);
+            outputStream.writeBytes(lineEnd);
+            outputStream.writeBytes(twoHyphens + boundary + twoHyphens);
 
             bytesAvailable = inputStream.available();
             bufferSize = Math.min(bytesAvailable, maxBufferSize);
             buffer = new byte[bufferSize];
-
             // Read file
             bytesRead = inputStream.read(buffer, 0, bufferSize);
-            Log.e("Image length", bytesAvailable + "");
+
             try {
                 while (bytesRead > 0) {
                     try {
@@ -313,12 +319,6 @@ public class CloudSavingActivity extends AppCompatActivity {
             }
             outputStream.writeBytes(lineEnd);
             outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-
-            outputStream.writeBytes("Content-Disposition: form-data; name=\"user\"" + lineEnd);
-            outputStream.writeBytes(lineEnd);
-            outputStream.writeBytes(user);
-            outputStream.writeBytes(lineEnd);
-            outputStream.writeBytes(twoHyphens + boundary + twoHyphens + user);
 
             // Responses from the server (code and message)
             int serverResponseCode = connection.getResponseCode();
