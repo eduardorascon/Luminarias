@@ -6,6 +6,7 @@ public class Luminaria {
     private String lon, lat;
     private String fechaHora;
     private int respladoDatos, respaldoImagen;
+    private int numeroLamparas;
 
     public String getTipoPoste() {
         return tipoPoste;
@@ -69,5 +70,13 @@ public class Luminaria {
 
     public void setRespaldoImagen(int respaldoImagen) {
         this.respaldoImagen = respaldoImagen;
+    }
+
+    public int getNumeroLamparas() {
+        return numeroLamparas;
+    }
+
+    public void setNumeroLamparas(int numeroLamparas) {
+        this.numeroLamparas = numeroLamparas;
     }
 }
