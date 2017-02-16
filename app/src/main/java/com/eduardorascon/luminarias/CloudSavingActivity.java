@@ -1,5 +1,7 @@
 package com.eduardorascon.luminarias;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,13 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
+import com.eduardorascon.luminarias.sqlite.Imagen;
 import com.eduardorascon.luminarias.sqlite.Luminaria;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -36,6 +41,12 @@ public class CloudSavingActivity extends AppCompatActivity {
     Button buttonLogin, buttonSave;
     String user;
     LinearLayout llLogin;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkMobileInternetConn();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,22 +159,32 @@ public class CloudSavingActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
-                String responseFile = "";// sendDataToServer(luminaria);
-                if (luminaria.getRespaldoImagen() == 0)
-                    responseFile = sendFileToServer(luminaria.getImagen());
 
-                if (luminaria.getRespaldoImagen() > 0 || responseFile.equals("200")) {
-                    DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+                DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
 
-                    if (luminaria.getRespaldoImagen() == 0)
-                        db.updateLuminariaRespladoImagen(luminaria);
-
-                    String responseData = sendDataToServer(luminaria);
-                    if (responseData.equals("200"))
-                        db.updateLuminariaRespaldoDatos(luminaria);
+                List<Imagen> imagenesList = null;
+                if (luminaria.getRespaldoImagen() == 0) {
+                    imagenesList = db.getAllImagenesFromLuminaria(luminaria);
+                    for (Imagen imagen : imagenesList) {
+                        String responseFile = sendFileToServer(imagen);
+                        if (responseFile.equals("200"))
+                            db.updateLuminariaRespladoImagen(luminaria);
+                    }
                 }
 
-                return responseFile;
+                String imagenes = "";
+                for (Imagen imagen : imagenesList) {
+                    if (imagenes.equals(""))
+                        imagenes = imagen.getNombreImagen();
+                    else
+                        imagenes += "|" + imagen.getNombreImagen();
+                }
+
+                String responseData = sendDataToServer(luminaria, imagenes);
+                if (responseData.equals("200"))
+                    db.updateLuminariaRespaldoDatos(luminaria);
+
+                return "";
             }
 
             @Override
@@ -173,7 +194,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         }.execute(null, null, null);
     }
 
-    private String sendDataToServer(Luminaria luminaria) {
+    private String sendDataToServer(Luminaria luminaria, String imagenes) {
         URL url;
         String response = "";
         try {
@@ -188,7 +209,8 @@ public class CloudSavingActivity extends AppCompatActivity {
 
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-            writer.write(getPostDataString(luminaria));
+
+            writer.write(getPostDataString(luminaria, imagenes));
 
             writer.flush();
             writer.close();
@@ -207,7 +229,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         return response;
     }
 
-    private String getPostDataString(Luminaria luminaria) throws UnsupportedEncodingException {
+    private String getPostDataString(Luminaria luminaria, String nombre_imagen) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         result.append(URLEncoder.encode("lat", "UTF-8")).append("=");
         result.append(URLEncoder.encode(luminaria.getLat(), "UTF-8")).append("&");
@@ -220,19 +242,18 @@ public class CloudSavingActivity extends AppCompatActivity {
         result.append(URLEncoder.encode("tipo_poste", "UTF-8")).append("=");
         result.append(URLEncoder.encode(luminaria.getTipoPoste(), "UTF-8")).append("&");
         result.append(URLEncoder.encode("imagen", "UTF-8")).append("=");
-        result.append(URLEncoder.encode(luminaria.getImagen(), "UTF-8")).append("&");
+        result.append(URLEncoder.encode(nombre_imagen, "UTF-8")).append("&");
         result.append(URLEncoder.encode("user", "UTF-8")).append("=");
         result.append(URLEncoder.encode(user, "UTF-8"));
         return result.toString();
     }
 
-    private String sendFileToServer(String filename) {
+    private String sendFileToServer(Imagen imagen) {
         String response = "error";
-        Log.e("Image filename", filename);
         HttpURLConnection connection = null;
         DataOutputStream outputStream = null;
 
-        String pathToOurFile = filename;
+        String pathToOurFile = imagen.getNombreImagen();
         String lineEnd = "\r\n";
         String twoHyphens = "--";
         String boundary = "*****";
@@ -241,7 +262,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         byte[] buffer;
         int maxBufferSize = 1 * 1024;
         try {
-            FileInputStream fileInputStream = new FileInputStream(new File(pathToOurFile));
+            InputStream inputStream = new ByteArrayInputStream(imagen.getImagen());
             URL url = new URL("http://luminarias.todoslosbits.com.mx/upload_image.php");
             connection = (HttpURLConnection) url.openConnection();
 
@@ -265,12 +286,12 @@ public class CloudSavingActivity extends AppCompatActivity {
             outputStream.writeBytes(connstr);
             outputStream.writeBytes(lineEnd);
 
-            bytesAvailable = fileInputStream.available();
+            bytesAvailable = inputStream.available();
             bufferSize = Math.min(bytesAvailable, maxBufferSize);
             buffer = new byte[bufferSize];
 
             // Read file
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            bytesRead = inputStream.read(buffer, 0, bufferSize);
             Log.e("Image length", bytesAvailable + "");
             try {
                 while (bytesRead > 0) {
@@ -281,9 +302,9 @@ public class CloudSavingActivity extends AppCompatActivity {
                         response = "outofmemoryerror";
                         return response;
                     }
-                    bytesAvailable = fileInputStream.available();
+                    bytesAvailable = inputStream.available();
                     bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                    bytesRead = inputStream.read(buffer, 0, bufferSize);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -298,7 +319,7 @@ public class CloudSavingActivity extends AppCompatActivity {
             if (serverResponseCode == HttpURLConnection.HTTP_OK)
                 response = String.valueOf(serverResponseCode);
 
-            fileInputStream.close();
+            inputStream.close();
             outputStream.flush();
             outputStream.close();
             outputStream = null;
@@ -309,5 +330,31 @@ public class CloudSavingActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
         return response;
+    }
+
+    private boolean isWifiEnabled() {
+        //Create object for ConnectivityManager class which returns network related info
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        if (connectivity == null) {
+            return false;
+        }
+        //Get network info - WIFI internet access
+        NetworkInfo info = connectivity.getActiveNetworkInfo();
+        if (info == null) {
+            return false;
+        }
+        //Check if network is WIFI
+        if (info.getType() != ConnectivityManager.TYPE_WIFI) {
+            return false;
+        }
+        //Look for whether device is currently connected to WIFI network
+        return info.isConnected();
+    }
+
+    private void checkMobileInternetConn() {
+        if (isWifiEnabled() == false) {
+            Toast.makeText(this, "CONEXION WIFI NO DISPONIBLE...", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 }

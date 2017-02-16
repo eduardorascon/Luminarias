@@ -2,19 +2,10 @@ package com.eduardorascon.luminarias.sqlite;
 
 public class Luminaria {
     private int id;
-    private String imagen;
     private String tipoPoste, tipoLampara;
     private String lon, lat;
     private String fechaHora;
     private int respladoDatos, respaldoImagen;
-
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
 
     public String getTipoPoste() {
         return tipoPoste;
