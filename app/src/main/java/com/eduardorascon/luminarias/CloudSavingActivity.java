@@ -162,17 +162,25 @@ public class CloudSavingActivity extends AppCompatActivity {
 
                 DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
 
-                List<Imagen> imagenesList=null;
+                List<Imagen> imagenesList = null;
                 if (luminaria.getRespaldoImagen() == 0) {
                     imagenesList = db.getAllImagenesFromLuminaria(luminaria);
-                    for (Imagen imagen : imagenesList){
+                    for (Imagen imagen : imagenesList) {
                         String responseFile = sendFileToServer(imagen);
-                        if(responseFile.equals("200"))
+                        if (responseFile.equals("200"))
                             db.updateLuminariaRespladoImagen(luminaria);
                     }
                 }
 
-                String responseData = sendDataToServer(luminaria, imagenesList);
+                String imagenes = "";
+                for (Imagen imagen : imagenesList) {
+                    if (imagenes.equals(""))
+                        imagenes = imagen.getNombreImagen();
+                    else
+                        imagenes += "|" + imagen.getNombreImagen();
+                }
+
+                String responseData = sendDataToServer(luminaria, imagenes);
                 if (responseData.equals("200"))
                     db.updateLuminariaRespaldoDatos(luminaria);
 
@@ -186,7 +194,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         }.execute(null, null, null);
     }
 
-    private String sendDataToServer(Luminaria luminaria, List<Imagen> imagenesList) {
+    private String sendDataToServer(Luminaria luminaria, String imagenes) {
         URL url;
         String response = "";
         try {
@@ -201,8 +209,8 @@ public class CloudSavingActivity extends AppCompatActivity {
 
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-            
-            writer.write(getPostDataString(luminaria));
+
+            writer.write(getPostDataString(luminaria, imagenes));
 
             writer.flush();
             writer.close();
@@ -221,7 +229,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         return response;
     }
 
-    private String getPostDataString(Luminaria luminaria) throws UnsupportedEncodingException {
+    private String getPostDataString(Luminaria luminaria, String nombre_imagen) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         result.append(URLEncoder.encode("lat", "UTF-8")).append("=");
         result.append(URLEncoder.encode(luminaria.getLat(), "UTF-8")).append("&");
@@ -234,7 +242,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         result.append(URLEncoder.encode("tipo_poste", "UTF-8")).append("=");
         result.append(URLEncoder.encode(luminaria.getTipoPoste(), "UTF-8")).append("&");
         result.append(URLEncoder.encode("imagen", "UTF-8")).append("=");
-        result.append(URLEncoder.encode(luminaria.getImagen(), "UTF-8")).append("&");
+        result.append(URLEncoder.encode(nombre_imagen, "UTF-8")).append("&");
         result.append(URLEncoder.encode("user", "UTF-8")).append("=");
         result.append(URLEncoder.encode(user, "UTF-8"));
         return result.toString();
