@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Luminarias</string>
-    <string name="create_table_luminarias">create table luminarias(_id integer primary key, lat text, lon text, tipo_poste text, numero_lamparas integer, tipo_lampara text, fecha_hora datetime default current_timestamp, respaldo_imagen integer default 0, respaldo_datos integer default 0)</string>
+    <string name="create_table_luminarias">create table luminarias(_id integer primary key, lat text, lon text, tipo_poste text, numero_lamparas text, tipo_lampara text, fecha_hora datetime default current_timestamp, respaldo_imagen integer default 0, respaldo_datos integer default 0)</string>
     <string name="create_table_imagenes">create table imagenes(_id integer primary key, luminaria_id integer, nombre_imagen text, imagen blob)</string>
     <string name="select_luminarias_data">SELECT _id, lat, lon, tipo_poste, tipo_lampara, numero_lamparas, datetime(fecha_hora, \'localtime\') fecha_hora, respaldo_imagen, respaldo_datos FROM luminarias where respaldo_datos = 0 or respaldo_imagen = 0</string>
     <string name="select_imagenes_data">SELECT _id, nombre_imagen, imagen FROM imagenes where luminaria_id = ?</string>
