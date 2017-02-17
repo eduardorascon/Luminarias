@@ -53,7 +53,7 @@ public class ImagePicker {
 
     private static Uri getPhotoUri(Context context) {
         photoFile = getTempFile(context);
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
             photoFileUri = Uri.fromFile(photoFile);
         } else {
             photoFileUri = FileProvider.getUriForFile(context, "com.eduardorascon.luminarias.fileprovider", photoFile);
