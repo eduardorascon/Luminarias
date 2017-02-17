@@ -26,4 +26,9 @@
         <item>LED</item>
         <item>INDUCCION MAGNETICA</item>
     </string-array>
+    <string-array name="numero_lamparas_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

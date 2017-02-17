@@ -82,10 +82,12 @@ public class MainActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         tipoPosteSpinner = (Spinner) findViewById(R.id.spinnerTipoPoste);
         tipoLamparaSpinner = (Spinner) findViewById(R.id.spinnerTipoLampara);
+        numeroLamparasSpinner = (Spinner) findViewById(R.id.spinnerNumeroLamparas);
         textViewTipoLampara = (TextView) findViewById(R.id.textViewTipoLampara);
 
         loadTipoLamparaSpinner();
         loadTipoPosteSpinner();
+        loadNumeroLamparasSpinner();
     }
 
     public void guardarLuminaria(View view) {
@@ -225,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private double longitudeGPS = 0.0d, latitudeGPS = 0.0d;
-    private Spinner tipoLamparaSpinner, tipoPosteSpinner;
+    private Spinner tipoLamparaSpinner, tipoPosteSpinner, numeroLamparasSpinner;
     private final LocationListener locationListenerGPS = new LocationListener() {
 
         @Override
@@ -278,6 +280,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void loadNumeroLamparasSpinner() {
+        numeroLamparasSpinner.setAdapter(new WrapAdapter(this, getResources().getStringArray(R.array.numero_lamparas_array)));
     }
 
     private boolean askForCameraPermission() {

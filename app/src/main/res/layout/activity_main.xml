@@ -27,27 +27,62 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewTipoPoste" />
 
-    <TextView
-        android:id="@+id/textViewTipoLampara"
+    <LinearLayout
+        android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/spinnerTipoPoste"
-        android:gravity="start"
-        android:text="LAMPARA:"
-        android:textAlignment="textStart"
-        android:textStyle="bold" />
+        android:orientation="horizontal">
 
-    <Spinner
-        android:id="@+id/spinnerTipoLampara"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewTipoLampara" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewTipoLampara"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="start"
+                android:text="LAMPARA:"
+                android:textAlignment="textStart"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinnerTipoLampara"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewNumeroLamparas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="# LAMPARAS:"
+                android:textAlignment="textStart"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinnerNumeroLamparas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spinnerTipoLampara"
+        android:layout_below="@id/linearLayout5"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center|center_vertical"
         android:layout_marginBottom="60dp"
