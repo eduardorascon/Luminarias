@@ -242,7 +242,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         result.append(URLEncoder.encode("tipo_poste", "UTF-8")).append("=");
         result.append(URLEncoder.encode(luminaria.getTipoPoste(), "UTF-8")).append("&");
         result.append(URLEncoder.encode("numero_lamparas", "UTF-8")).append("=");
-        result.append(URLEncoder.encode(String.valueOf(luminaria.getNumeroLamparas()), "UTF-8")).append("&");
+        result.append(URLEncoder.encode(luminaria.getNumeroLamparas(), "UTF-8")).append("&");
         result.append(URLEncoder.encode("imagen", "UTF-8")).append("=");
         result.append(URLEncoder.encode(nombre_imagen, "UTF-8")).append("&");
         result.append(URLEncoder.encode("user", "UTF-8")).append("=");
