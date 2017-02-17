@@ -180,9 +180,11 @@ public class CloudSavingActivity extends AppCompatActivity {
                         imagenes += "|" + imagen.getNombreImagen();
                 }
 
-                String responseData = sendDataToServer(luminaria, imagenes);
-                if (responseData.equals("200"))
-                    db.updateLuminariaRespaldoDatos(luminaria);
+                if(luminaria.getResaldoDatos()==0){
+                    String responseData = sendDataToServer(luminaria, imagenes);
+                    if (responseData.equals("200"))
+                        db.updateLuminariaRespaldoDatos(luminaria);
+                }
 
                 return "";
             }
