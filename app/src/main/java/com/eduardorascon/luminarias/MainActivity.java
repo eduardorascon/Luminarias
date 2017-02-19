@@ -152,8 +152,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (latitudeGPS == 0.0d || longitudeGPS == 0.0d) {
-            toggleGPSUpdates();
             Toast.makeText(this, "La ubicación aun no esta calculada", Toast.LENGTH_LONG).show();
+            askForLocationPermission();
+            //toggleGPSUpdates();
             return false;
         }
 
@@ -336,8 +337,10 @@ public class MainActivity extends AppCompatActivity {
             case 2://ACCESS_FINE_LOCATION
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Toast.makeText(MainActivity.this, "Es necesario contar con el permiso solicitado", Toast.LENGTH_LONG).show();
+                    askForLocationPermission();
+                } else {
+                    toggleGPSUpdates();
                 }
-                toggleGPSUpdates();
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
