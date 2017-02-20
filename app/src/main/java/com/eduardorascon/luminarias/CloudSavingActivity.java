@@ -148,9 +148,6 @@ public class CloudSavingActivity extends AppCompatActivity {
     public void getImages(View view) {
         view.setEnabled(false);
         makeHTTPCall();
-
-        //Close activity when finished.
-        finish();
     }
 
     private void makeHTTPCall() {
@@ -196,10 +193,22 @@ public class CloudSavingActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String s) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(), "INFORMACION ENVIADA AL SERVIDOR", Toast.LENGTH_LONG).show();
+                finishActivity();
             }
         }.execute(null, null, null);
+    }
+
+    private void finishActivity(){
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(), "INFORMACION ENVIADA AL SERVIDOR", Toast.LENGTH_LONG).show();
+                // close this activity
+                finish();
+            }
+        }, SPLASH_SCREEN_TIME);
     }
 
     private String sendDataToServer(Luminaria luminaria, String imagenes) {
