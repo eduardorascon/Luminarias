@@ -41,6 +41,7 @@ public class CloudSavingActivity extends AppCompatActivity {
     Button buttonLogin, buttonSave;
     String user;
     LinearLayout llLogin;
+    ProgressBar progressBar;
 
     @Override
     protected void onResume() {
@@ -73,6 +74,8 @@ public class CloudSavingActivity extends AppCompatActivity {
                 checkUser(view);
             }
         });
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
     private void checkUser(View view) {
@@ -157,6 +160,10 @@ public class CloudSavingActivity extends AppCompatActivity {
 
     private void makeHTTPCall(final Luminaria luminaria) {
         new AsyncTask<Void, Void, String>() {
+            @OnPreExecute(){
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
             @Override
             protected String doInBackground(Void... voids) {
 
@@ -191,6 +198,7 @@ public class CloudSavingActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String s) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(), "INFORMACION ENVIADA AL SERVIDOR", Toast.LENGTH_LONG).show();
             }
         }.execute(null, null, null);
