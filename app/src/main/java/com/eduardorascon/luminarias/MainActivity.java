@@ -142,24 +142,24 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validateInput() {
         if (tipoPosteSpinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Tipo de poste no seleccionado", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.POST_TYPE_NOT_SELECTED_MESSAGE, Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (tipoLamparaSpinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Tipo de lampara no seleccionado", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.LAMP_TYPE_NOT_SELECTED_MESSAGE, Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (latitudeGPS == 0.0d || longitudeGPS == 0.0d) {
-            Toast.makeText(this, "La ubicación aun no esta calculada", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.LOCATION_NOT_DEFINED_MESSAGE, Toast.LENGTH_LONG).show();
             askForLocationPermission();
             //toggleGPSUpdates();
             return false;
         }
 
         if (imageView.getDrawable() == null) {
-            Toast.makeText(this, "La fotografia no ha sido tomada", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.PICTURE_UNAVAILABLE_MESSAGE, Toast.LENGTH_LONG).show();
             return false;
         }
 
