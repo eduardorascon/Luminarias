@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     private void resetInput() {
         tipoPosteSpinner.setSelection(0);
         tipoLamparaSpinner.setSelection(0);
+        numeroLamparasSpinner.setSelection(0);
         latitudeGPS = 0.0d;
         longitudeGPS = 0.0d;
         textViewTipoLampara.setText("LAMPARA:");
