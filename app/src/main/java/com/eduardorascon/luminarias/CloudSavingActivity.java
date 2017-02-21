@@ -4,6 +4,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
@@ -152,7 +154,9 @@ public class CloudSavingActivity extends AppCompatActivity {
 
     private void makeHTTPCall() {
         new AsyncTask<Void, Void, String>() {
-            @OnPreExecute(){
+
+            @Override
+            protected void onPreExecute() {
                 progressBar.setVisibility(View.VISIBLE);
             }
 
@@ -162,7 +166,7 @@ public class CloudSavingActivity extends AppCompatActivity {
                 DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
                 List<Luminaria> luminariaList = db.getAllLuminarias();
 
-                for (Luminaria luminaria : luminariaList){
+                for (Luminaria luminaria : luminariaList) {
 
                     List<Imagen> imagenesList = null;
                     if (luminaria.getRespaldoImagen() == 0) {
@@ -198,7 +202,7 @@ public class CloudSavingActivity extends AppCompatActivity {
         }.execute(null, null, null);
     }
 
-    private void finishActivity(){
+    private void finishActivity() {
         new Handler().postDelayed(new Runnable() {
 
             @Override
@@ -208,7 +212,7 @@ public class CloudSavingActivity extends AppCompatActivity {
                 // close this activity
                 finish();
             }
-        }, SPLASH_SCREEN_TIME);
+        }, 2000);
     }
 
     private String sendDataToServer(Luminaria luminaria, String imagenes) {
