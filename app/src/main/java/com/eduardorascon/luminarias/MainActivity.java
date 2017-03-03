@@ -137,30 +137,30 @@ public class MainActivity extends AppCompatActivity {
         numeroLamparasSpinner.setSelection(0);
         latitudeGPS = 0.0d;
         longitudeGPS = 0.0d;
-        textViewTipoLampara.setText("LAMPARA:");
+        textViewTipoLampara.setText(R.string.main_activity_tipo_lampara);
         imageView.setImageDrawable(null);
     }
 
     private boolean validateInput() {
         if (tipoPosteSpinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Tipo de poste no seleccionado", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.main_activity_tipo_poste_error, Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (tipoLamparaSpinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Tipo de lampara no seleccionado", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.main_activity_tipo_lampara_error, Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (latitudeGPS == 0.0d || longitudeGPS == 0.0d) {
-            Toast.makeText(this, "La ubicación aun no esta calculada", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.main_activity_location_error, Toast.LENGTH_LONG).show();
             askForLocationPermission();
             //toggleGPSUpdates();
             return false;
         }
 
         if (imageView.getDrawable() == null) {
-            Toast.makeText(this, "La fotografia no ha sido tomada", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.main_activity_picture_error, Toast.LENGTH_LONG).show();
             return false;
         }
 
