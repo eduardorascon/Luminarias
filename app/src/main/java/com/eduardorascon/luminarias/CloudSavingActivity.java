@@ -4,6 +4,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.eduardorascon.luminarias.sqlite.DatabaseHandler;
@@ -41,6 +43,7 @@ public class CloudSavingActivity extends AppCompatActivity {
     Button buttonLogin, buttonSave;
     String user;
     LinearLayout llLogin;
+    ProgressBar progressBar;
 
     @Override
     protected void onResume() {
@@ -73,6 +76,8 @@ public class CloudSavingActivity extends AppCompatActivity {
                 checkUser(view);
             }
         });
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
     private void checkUser(View view) {
@@ -144,56 +149,70 @@ public class CloudSavingActivity extends AppCompatActivity {
 
     public void getImages(View view) {
         view.setEnabled(false);
-
-        DatabaseHandler db = DatabaseHandler.getInstance(this);
-        List<Luminaria> luminariaList = db.getAllLuminarias();
-
-        for (Luminaria luminaria : luminariaList)
-            makeHTTPCall(luminaria);
-
-        //Close activity when finished.
-        finish();
+        makeHTTPCall();
     }
 
-    private void makeHTTPCall(final Luminaria luminaria) {
+    private void makeHTTPCall() {
         new AsyncTask<Void, Void, String>() {
+
+            @Override
+            protected void onPreExecute() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
             @Override
             protected String doInBackground(Void... voids) {
 
                 DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+                List<Luminaria> luminariaList = db.getAllLuminarias();
 
-                List<Imagen> imagenesList = null;
-                if (luminaria.getRespaldoImagen() == 0) {
-                    imagenesList = db.getAllImagenesFromLuminaria(luminaria);
+                for (Luminaria luminaria : luminariaList) {
+
+                    List<Imagen> imagenesList = null;
+                    if (luminaria.getRespaldoImagen() == 0) {
+                        imagenesList = db.getAllImagenesFromLuminaria(luminaria);
+                        for (Imagen imagen : imagenesList) {
+                            String responseFile = sendFileToServer(imagen);
+                            if (responseFile.equals("200"))
+                                db.updateLuminariaRespladoImagen(luminaria);
+                        }
+                    }
+
+                    String imagenes = "";
                     for (Imagen imagen : imagenesList) {
-                        String responseFile = sendFileToServer(imagen);
-                        if (responseFile.equals("200"))
-                            db.updateLuminariaRespladoImagen(luminaria);
+                        if (imagenes.equals(""))
+                            imagenes = imagen.getNombreImagen();
+                        else
+                            imagenes += "|" + imagen.getNombreImagen();
+                    }
+
+                    if (luminaria.getRespladoDatos() == 0) {
+                        String responseData = sendDataToServer(luminaria, imagenes);
+                        if (responseData.equals("200"))
+                            db.updateLuminariaRespaldoDatos(luminaria);
                     }
                 }
-
-                String imagenes = "";
-                for (Imagen imagen : imagenesList) {
-                    if (imagenes.equals(""))
-                        imagenes = imagen.getNombreImagen();
-                    else
-                        imagenes += "|" + imagen.getNombreImagen();
-                }
-
-                if (luminaria.getRespladoDatos() == 0) {
-                    String responseData = sendDataToServer(luminaria, imagenes);
-                    if (responseData.equals("200"))
-                        db.updateLuminariaRespaldoDatos(luminaria);
-                }
-
                 return "";
             }
 
             @Override
             protected void onPostExecute(String s) {
-                Toast.makeText(getApplicationContext(), "INFORMACION ENVIADA AL SERVIDOR", Toast.LENGTH_LONG).show();
+                finishActivity();
             }
         }.execute(null, null, null);
+    }
+
+    private void finishActivity() {
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(), "INFORMACION ENVIADA AL SERVIDOR", Toast.LENGTH_LONG).show();
+                // close this activity
+                finish();
+            }
+        }, 2000);
     }
 
     private String sendDataToServer(Luminaria luminaria, String imagenes) {

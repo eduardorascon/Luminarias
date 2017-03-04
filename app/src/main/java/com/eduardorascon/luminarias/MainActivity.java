@@ -134,32 +134,33 @@ public class MainActivity extends AppCompatActivity {
     private void resetInput() {
         tipoPosteSpinner.setSelection(0);
         tipoLamparaSpinner.setSelection(0);
+        numeroLamparasSpinner.setSelection(0);
         latitudeGPS = 0.0d;
         longitudeGPS = 0.0d;
-        textViewTipoLampara.setText("LAMPARA:");
+        textViewTipoLampara.setText(R.string.main_activity_tipo_lampara);
         imageView.setImageDrawable(null);
     }
 
     private boolean validateInput() {
         if (tipoPosteSpinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, R.string.POST_TYPE_NOT_SELECTED_MESSAGE, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.main_activity_tipo_poste_error, Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (tipoLamparaSpinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, R.string.LAMP_TYPE_NOT_SELECTED_MESSAGE, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.main_activity_tipo_lampara_error, Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (latitudeGPS == 0.0d || longitudeGPS == 0.0d) {
-            Toast.makeText(this, R.string.LOCATION_NOT_DEFINED_MESSAGE, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.main_activity_location_error, Toast.LENGTH_LONG).show();
             askForLocationPermission();
             //toggleGPSUpdates();
             return false;
         }
 
         if (imageView.getDrawable() == null) {
-            Toast.makeText(this, R.string.PICTURE_UNAVAILABLE_MESSAGE, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.main_activity_picture_error, Toast.LENGTH_LONG).show();
             return false;
         }
 
